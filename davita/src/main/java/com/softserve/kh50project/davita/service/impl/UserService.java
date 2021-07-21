@@ -2,15 +2,11 @@ package com.softserve.kh50project.davita.service.impl;
 
 import com.softserve.kh50project.davita.model.Role;
 import com.softserve.kh50project.davita.model.User;
-import com.softserve.kh50project.davita.model.UserRole;
 import com.softserve.kh50project.davita.repository.RoleRepository;
 import com.softserve.kh50project.davita.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service("userService")
 public class UserService {
@@ -36,8 +32,8 @@ public class UserService {
 
     public User saveUser(User user) {
         Role userRole = roleRepository.findByName("ROLE_USER");             ////???????
+        user.addRole(userRole);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setUserRoles(new ArrayList<UserRole>().add(userRole));        ////???????
         return userRepository.save(user);
     }
 
