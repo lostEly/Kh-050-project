@@ -13,10 +13,19 @@ import javax.validation.Valid;
 
 @RestController
 public class AuthController {
-    @Autowired
+
     private UserService userService;
-    @Autowired
     private JwtProvider jwtProvider;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Autowired
+    public void setJwtProvider(JwtProvider jwtProvider) {
+        this.jwtProvider = jwtProvider;
+    }
 
     @PostMapping("/register")
     public String registerUser(@RequestBody @Valid RegistrationRequest registrationRequest) {
