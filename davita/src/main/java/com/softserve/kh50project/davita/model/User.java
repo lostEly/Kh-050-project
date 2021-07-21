@@ -1,7 +1,6 @@
 package com.softserve.kh50project.davita.model;
 
 import lombok.Data;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
