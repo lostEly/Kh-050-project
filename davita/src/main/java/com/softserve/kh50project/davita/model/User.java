@@ -1,6 +1,7 @@
 package com.softserve.kh50project.davita.model;
 
 import lombok.Data;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -15,7 +16,7 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long userId;
 
     @Column(nullable = false)
@@ -37,11 +38,11 @@ public class User {
     @Column
     LocalDate dateOfBirthday;
 
-    @Column(unique = true)
+    @Column
     @Pattern(regexp = "(^$|[0-9]{10})")
     String phone;
 
-    @Column(unique = true)
+    @Column
     @Email
     @Size(max = 45)
     String email;
