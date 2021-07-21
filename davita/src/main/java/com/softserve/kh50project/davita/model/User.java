@@ -1,6 +1,7 @@
 package com.softserve.kh50project.davita.model;
 
 import lombok.Data;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -12,7 +13,7 @@ import java.util.List;
 @Data
 @Entity(name = "userr")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class User {
+public abstract class User   {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long userId;
@@ -47,4 +48,5 @@ public abstract class User {
 
     @OneToMany(mappedBy = "user")
     List<UserRole> userRoles;
+
 }
