@@ -36,12 +36,12 @@ public class Role {
 
     public void addPermission(Permission permission) {
         permissions.add(permission);
-        permission.getRoles().add(this);
+        permission.getRolePermission().add(this);
     }
 
     public void removePermission(Permission permission) {
         permissions.remove(permission);
-        permission.getRoles().remove(this);
+        permission.getRolePermission().remove(this);
     }
 
 }
