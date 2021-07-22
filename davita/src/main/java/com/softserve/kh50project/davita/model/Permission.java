@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -17,6 +18,6 @@ public class Permission {
     @Size(max = 45)
     String name;
 
-    @OneToMany(mappedBy = "permission")
-    Set<RolePermission> rolePermissions;
+    @ManyToMany(mappedBy = "permissions")
+    private Set<Role> rolePermission = new HashSet<>();
 }
