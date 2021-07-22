@@ -19,6 +19,5 @@ public class Permission {
     String name;
 
     @ManyToMany(mappedBy = "permission")
-    private Set<Role> roles = new HashSet<>();
-
+    private Set<Role> rolePermission = new HashSet<>();
 }
