@@ -12,36 +12,61 @@ import java.util.*;
 @RequestMapping("/patients")
 public class PatientController {
 
-    // get patient by id
+    /**
+     * Getting patient by id
+     *
+     * @param id patient id
+     * @return the patient by id
+     */
     @GetMapping(value = "/{id}")
-    public Patient readById(@PathVariable Long id) {
+    public ResponseEntity<Patient> readById(@PathVariable Long id) {
         Patient patient = new Patient();
         patient.setUserId(id);
-        return patient;
+
+        return new ResponseEntity<>(patient, HttpStatus.OK);
     }
 
-    // get list of all patients or patients by name and birthday
+    /**
+     * Getting all patients or patient by parameters
+     *
+     * @param name optional, patient name
+     * @param lastName optional, patient lastname
+     * @param dateOfBirth optional, patient date of birth
+     * @return the list of patients, return empty list if the patient wasn't found
+     */
     @GetMapping
-    public List<Patient> read(@RequestParam(value = "name", required = false) String name,
+    public ResponseEntity<List<Patient>> read(@RequestParam(value = "name", required = false) String name,
                               @RequestParam(value = "lastName", required = false) String lastName,
                               @RequestParam(value = "dateOfBirth", required = false) LocalDate dateOfBirth) {
         Patient patient = new Patient();
         Patient patient1 = new Patient();
         Patient patient2 = new Patient();
+
         if (Objects.isNull(name) && Objects.isNull(lastName) && Objects.isNull(dateOfBirth)) {
-            return List.of(patient, patient1, patient2);
+            return new ResponseEntity<>(List.of(patient, patient1, patient2), HttpStatus.OK);
         }
-        return List.of(patient);
+        return new ResponseEntity<>(List.of(patient), HttpStatus.OK);
 
     }
 
-    // create patient
+    /**
+     * Creating a patient
+     *
+     * @param patient which should be create
+     * @return the created patient
+     */
     @PostMapping
     public ResponseEntity<Patient> create(@RequestBody Patient patient) {
         return new ResponseEntity<>(patient, HttpStatus.CREATED);
     }
 
-    // update patient
+    /**
+     * Updating the patient
+     *
+     * @param patient which should be update
+     * @param id
+     * @return the updated patient
+     */
     @PutMapping(value = "/{id}")
     public ResponseEntity<Patient> update(@RequestBody Patient patient, @PathVariable Long id) {
         patient.setName("John");
@@ -49,6 +74,7 @@ public class PatientController {
     }
 
     /**
+     * Partial updating the patient
      *
      * @param fields is map where keys are updated fields and values are field values
      * @return partly updated patient
@@ -58,8 +84,14 @@ public class PatientController {
         return new ResponseEntity<>(new Patient(), HttpStatus.OK);
     }
 
-    // delete patient
+    /**
+     * Deleting the patient
+     *
+     * @param id patient id
+     * @return ResponseEntity with status OK
+     */
     @DeleteMapping(value = "/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        return ResponseEntity.ok().build();
     }
 }
