@@ -49,7 +49,6 @@ public class PatientController {
     }
 
     /**
-     * Generation of lab numbers for standalone test
      *
      * @param fields is map where keys are updated fields and values are field values
      * @return partly updated patient
