@@ -1,7 +1,6 @@
 package com.softserve.kh50project.davita.controller;
 
 import com.softserve.kh50project.davita.model.Doctor;
-import com.softserve.kh50project.davita.model.Patient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,34 +11,57 @@ import java.util.*;
 @RequestMapping("/doctors")
 public class DoctorController {
 
-    // get doctor by id
+    /**
+     * Getting doctor by id
+     *
+     * @param id doctor id
+     * @return the doctor by id
+     */
     @GetMapping(value = "/{id}")
-    public Doctor readById(@PathVariable Long id) {
+    public ResponseEntity<Doctor> readById(@PathVariable Long id) {
         Doctor doctor = new Doctor();
         doctor.setUserId(id);
-        return doctor;
+
+        return new ResponseEntity<>(doctor, HttpStatus.OK);
     }
 
-    // get list of all doctors or doctors with some specialization
+    /**
+     * Getting all doctors or doctors with some specialization
+     *
+     * @param specialization optional, doctor specialization
+     * @return the list of doctors
+     */
     @GetMapping
-    public List<Doctor> read(@RequestParam(value = "specialization", required = false) String specialization) {
+    public ResponseEntity<List<Doctor>> read(@RequestParam(value = "specialization", required = false) String specialization) {
         Doctor doctor = new Doctor();
         Doctor doctor1 = new Doctor();
         Doctor doctor2 = new Doctor();
+
         if (Objects.isNull(specialization)) {
-            return new ArrayList<>(Arrays.asList(doctor, doctor1, doctor2));
+            return new ResponseEntity<>(List.of(doctor, doctor1, doctor2), HttpStatus.OK);
         }
-        return new ArrayList<>(Arrays.asList(doctor, doctor2));
+        return new ResponseEntity<>(List.of(doctor, doctor2), HttpStatus.OK);
 
     }
 
-    // create doctor
+    /**
+     * Creating a doctor
+     *
+     * @param doctor which should be create
+     * @return the created doctor
+     */
     @PostMapping
     public ResponseEntity<Doctor> create(@RequestBody Doctor doctor) {
         return new ResponseEntity<>(doctor, HttpStatus.CREATED);
     }
 
-    // update doctor
+    /**
+     * Updating the doctor
+     *
+     * @param doctor which should be update
+     * @param id
+     * @return the updated doctor
+     */
     @PutMapping(value = "/{id}")
     public ResponseEntity<Doctor> update(@RequestBody Doctor doctor, @PathVariable Long id) {
         doctor.setName("John");
@@ -47,6 +69,7 @@ public class DoctorController {
     }
 
     /**
+     * Partial updating the doctor
      *
      * @param fields is map where keys are updated fields and values are field values
      * @return partly updated doctor
@@ -56,8 +79,14 @@ public class DoctorController {
         return new ResponseEntity<>(new Doctor(), HttpStatus.OK);
     }
 
-    // delete doctor
+    /**
+     * Deleting the doctor
+     *
+     * @param id doctor id
+     * @return ResponseEntity with status OK
+     */
     @DeleteMapping(value = "/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        return ResponseEntity.ok().build();
     }
 }
