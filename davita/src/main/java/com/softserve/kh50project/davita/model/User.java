@@ -15,7 +15,7 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long userId;
 
     @Column(nullable = false)
@@ -37,11 +37,11 @@ public class User {
     @Column
     LocalDate dateOfBirthday;
 
-    @Column
+    @Column(unique = true)
     @Pattern(regexp = "(^$|[0-9]{10})")
     String phone;
 
-    @Column
+    @Column(unique = true)
     @Email
     @Size(max = 45)
     String email;

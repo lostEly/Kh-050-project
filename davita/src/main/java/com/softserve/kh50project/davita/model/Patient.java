@@ -13,7 +13,7 @@ import java.util.List;
 @PrimaryKeyJoinColumn(name = "patient_id")
 public class Patient extends User {
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @Size(max = 45)
     String insuranceNumber;
 

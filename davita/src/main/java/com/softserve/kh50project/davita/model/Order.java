@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Entity(name = "orderr")
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long orderId;
 
     @Column(nullable = false)

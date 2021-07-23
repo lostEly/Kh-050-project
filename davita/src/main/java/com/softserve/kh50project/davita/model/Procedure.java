@@ -11,7 +11,7 @@ import java.util.List;
 @Entity(name = "procedure")
 public class Procedure {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long procedureId;
 
     @Column(nullable = false)

@@ -9,7 +9,7 @@ import java.util.List;
 @Entity(name = "equipment")
 public class Equipment {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long equipmentId;
 
     @Column(nullable = false)
