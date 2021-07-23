@@ -4,10 +4,25 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
-    <changeSet author="krasn (generated)" id="1626983614485-1">
-        <createSequence sequenceName="hibernate_sequence"/>
+    <changeSet author="lostEly" id="1627026225178-1">
+        <createSequence sequenceName="equipment_equipment_id_seq"/>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-2">
+    <changeSet author="lostEly" id="1627026225178-2">
+        <createSequence sequenceName="orderr_order_id_seq"/>
+    </changeSet>
+    <changeSet author="lostEly" id="1627026225178-3">
+        <createSequence sequenceName="permission_permission_id_seq"/>
+    </changeSet>
+    <changeSet author="lostEly" id="1627026225178-4">
+        <createSequence sequenceName="procedure_procedure_id_seq"/>
+    </changeSet>
+    <changeSet author="lostEly" id="1627026225178-5">
+        <createSequence sequenceName="role_role_id_seq"/>
+    </changeSet>
+    <changeSet author="lostEly" id="1627026225178-6">
+        <createSequence sequenceName="userr_user_id_seq"/>
+    </changeSet>
+    <changeSet author="lostEly" id="1627026225178-7">
         <createTable tableName="doctor">
             <column name="certificate_number" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -20,20 +35,20 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-3">
+    <changeSet author="lostEly" id="1627026225178-8">
         <createTable tableName="equipment">
-            <column name="equipment_id" type="BIGINT">
-                <constraints nullable="false"/>
+            <column autoIncrement="true" name="equipment_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="equipment_pkey"/>
             </column>
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-4">
+    <changeSet author="lostEly" id="1627026225178-9">
         <createTable tableName="orderr">
-            <column name="order_id" type="BIGINT">
-                <constraints nullable="false"/>
+            <column autoIncrement="true" name="order_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="orderr_pkey"/>
             </column>
             <column name="cost" type="FLOAT8">
                 <constraints nullable="false"/>
@@ -49,7 +64,7 @@
             <column name="procedure_id" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-5">
+    <changeSet author="lostEly" id="1627026225178-10">
         <createTable tableName="patient">
             <column name="insurance_number" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -59,20 +74,20 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-6">
+    <changeSet author="lostEly" id="1627026225178-11">
         <createTable tableName="permission">
-            <column name="permission_id" type="BIGINT">
-                <constraints nullable="false"/>
+            <column autoIncrement="true" name="permission_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="permission_pkey"/>
             </column>
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-7">
+    <changeSet author="lostEly" id="1627026225178-12">
         <createTable tableName="procedure">
-            <column name="procedure_id" type="BIGINT">
-                <constraints nullable="false"/>
+            <column autoIncrement="true" name="procedure_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="procedure_pkey"/>
             </column>
             <column name="cost" type="FLOAT8">
                 <constraints nullable="false"/>
@@ -88,29 +103,40 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-8">
+    <changeSet author="lostEly" id="1627026225178-13">
         <createTable tableName="role">
-            <column name="role_id" type="BIGINT">
-                <constraints nullable="false"/>
+            <column autoIncrement="true" name="role_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="role_pkey"/>
             </column>
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-9">
+    <changeSet author="lostEly" id="1627026225178-14">
         <createTable tableName="role_permission">
-            <column name="id" type="BIGINT">
+            <column name="role_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="permission_id" type="BIGINT"/>
-            <column name="role_id" type="BIGINT"/>
+            <column name="permission_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-10">
-        <createTable tableName="userr">
+    <changeSet author="lostEly" id="1627026225178-15">
+        <createTable tableName="user_role">
             <column name="user_id" type="BIGINT">
                 <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="lostEly" id="1627026225178-16">
+        <createTable tableName="userr">
+            <column autoIncrement="true" name="user_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="userr_pkey"/>
             </column>
             <column name="date_of_birthday" type="date"/>
             <column name="email" type="VARCHAR(255)"/>
@@ -129,73 +155,55 @@
             <column name="phone" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-11">
-        <createTable tableName="userr_role">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="role_id" type="BIGINT"/>
-            <column name="user_id" type="BIGINT"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-12">
+    <changeSet author="lostEly" id="1627026225178-17">
         <addPrimaryKey columnNames="doctor_id" constraintName="doctor_pkey" tableName="doctor"/>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-13">
-        <addPrimaryKey columnNames="equipment_id" constraintName="equipment_pkey" tableName="equipment"/>
-    </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-14">
-        <addPrimaryKey columnNames="order_id" constraintName="orderr_pkey" tableName="orderr"/>
-    </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-15">
+    <changeSet author="lostEly" id="1627026225178-18">
         <addPrimaryKey columnNames="patient_id" constraintName="patient_pkey" tableName="patient"/>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-16">
-        <addPrimaryKey columnNames="permission_id" constraintName="permission_pkey" tableName="permission"/>
+    <changeSet author="lostEly" id="1627026225178-19">
+        <addPrimaryKey columnNames="role_id, permission_id" constraintName="role_permission_pkey" tableName="role_permission"/>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-17">
-        <addPrimaryKey columnNames="procedure_id" constraintName="procedure_pkey" tableName="procedure"/>
+    <changeSet author="lostEly" id="1627026225178-20">
+        <addUniqueConstraint columnNames="name" constraintName="uk_8sewwnpamngi6b1dwaa88askk" tableName="role"/>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-18">
-        <addPrimaryKey columnNames="id" constraintName="role_permission_pkey" tableName="role_permission"/>
+    <changeSet author="lostEly" id="1627026225178-21">
+        <addUniqueConstraint columnNames="email" constraintName="uk_fquhh9vhs8636tad5s6jvfvei" tableName="userr"/>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-19">
-        <addPrimaryKey columnNames="role_id" constraintName="role_pkey" tableName="role"/>
+    <changeSet author="lostEly" id="1627026225178-22">
+        <addUniqueConstraint columnNames="phone" constraintName="uk_lcsqvhnm09xcvb8y9c8qmi53p" tableName="userr"/>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-20">
-        <addPrimaryKey columnNames="user_id" constraintName="userr_pkey" tableName="userr"/>
+    <changeSet author="lostEly" id="1627026225178-23">
+        <addUniqueConstraint columnNames="insurance_number" constraintName="uk_n0k5i6mao18wg4t5l0tolsdtk" tableName="patient"/>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-21">
-        <addPrimaryKey columnNames="id" constraintName="userr_role_pkey" tableName="userr_role"/>
-    </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-22">
-        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="userr_role" constraintName="fk27dxvbkudfno5fapk4gbymb3q" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="user_id" referencedTableName="userr"/>
-    </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-23">
+    <changeSet author="lostEly" id="1627026225178-24">
         <addForeignKeyConstraint baseColumnNames="doctor_id" baseTableName="doctor" constraintName="fk3l1ywtpl8ymmqlje51r55yvqk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="user_id" referencedTableName="userr"/>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-24">
+    <changeSet author="lostEly" id="1627026225178-25">
         <addForeignKeyConstraint baseColumnNames="doctor_id" baseTableName="orderr" constraintName="fk3s1xv2is2s058vb7nvej69807" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="doctor_id" referencedTableName="doctor"/>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-25">
-        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="userr_role" constraintName="fk7a3kgdbdx7fqm1xtqtbfbkx0b" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="role_id" referencedTableName="role"/>
+    <changeSet author="lostEly" id="1627026225178-26">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_role" constraintName="fk60jlo3dtc2puvn4388hbqs0oi" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="user_id" referencedTableName="userr"/>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-26">
+    <changeSet author="lostEly" id="1627026225178-27">
         <addForeignKeyConstraint baseColumnNames="procedure_id" baseTableName="orderr" constraintName="fk8eetntcyavtqrddsgssxwu8vi" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="procedure_id" referencedTableName="procedure"/>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-27">
+    <changeSet author="lostEly" id="1627026225178-28">
         <addForeignKeyConstraint baseColumnNames="equipment_id" baseTableName="procedure" constraintName="fk8v2bb2llv23ix8bgpfitelaet" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="equipment_id" referencedTableName="equipment"/>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-28">
+    <changeSet author="lostEly" id="1627026225178-29">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="user_role" constraintName="fka68196081fvovjhkek5m97n3y" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="role_id" referencedTableName="role"/>
+    </changeSet>
+    <changeSet author="lostEly" id="1627026225178-30">
         <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="role_permission" constraintName="fka6jx8n8xkesmjmv6jqug6bg68" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="role_id" referencedTableName="role"/>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-29">
+    <changeSet author="lostEly" id="1627026225178-31">
         <addForeignKeyConstraint baseColumnNames="patient_id" baseTableName="patient" constraintName="fkbs9eqwv22xmg9bkcu48ipjxgd" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="user_id" referencedTableName="userr"/>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-30">
+    <changeSet author="lostEly" id="1627026225178-32">
         <addForeignKeyConstraint baseColumnNames="permission_id" baseTableName="role_permission" constraintName="fkf8yllw1ecvwqy3ehyxawqa1qp" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="permission_id" referencedTableName="permission"/>
     </changeSet>
-    <changeSet author="krasn (generated)" id="1626983614485-31">
+    <changeSet author="lostEly" id="1627026225178-33">
         <addForeignKeyConstraint baseColumnNames="patient_id" baseTableName="orderr" constraintName="fktphqr8wugvplf6hi0gktoih37" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="patient_id" referencedTableName="patient"/>
     </changeSet>
 </databaseChangeLog>

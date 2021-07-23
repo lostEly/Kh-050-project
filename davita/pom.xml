@@ -91,7 +91,6 @@
                 <version>3.4.1</version>
                 <configuration>
                     <propertyFile>target/classes/liquibase.properties</propertyFile>
-<!--                    <changeLogFile>src/main/resources/db/changelog/changelog-master.xml</changeLogFile>-->
                 </configuration>
             </plugin>
         </plugins>
