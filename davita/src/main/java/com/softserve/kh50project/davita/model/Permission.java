@@ -4,19 +4,20 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @Entity(name = "permission")
 public class Permission {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long permissionId;
 
     @Column(nullable = false)
     @Size(max = 45)
     String name;
 
-    @OneToMany(mappedBy = "permission")
-    Set<RolePermission> rolePermissions;
+    @ManyToMany(mappedBy = "permissions")
+    private Set<Role> rolePermission = new HashSet<>();
 }

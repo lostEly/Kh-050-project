@@ -7,14 +7,15 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @Entity(name = "userr")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class User {
+public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long userId;
 
     @Column(nullable = false)
@@ -36,15 +37,34 @@ public abstract class User {
     @Column
     LocalDate dateOfBirthday;
 
-    @Column
+    @Column(unique = true)
     @Pattern(regexp = "(^$|[0-9]{10})")
     String phone;
 
-    @Column
+    @Column(unique = true)
     @Email
     @Size(max = 45)
     String email;
 
-    @OneToMany(mappedBy = "user")
-    List<UserRole> userRoles;
+
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private List<Role> roles = new ArrayList<>();
+
+    public void addRole(Role role) {
+        roles.add(role);
+        role.getUsers().add(this);
+    }
+
+    public void removeRole(Role role) {
+        roles.remove(role);
+        role.getUsers().remove(this);
+    }
+
 }
