@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@Entity(name = "permission")
+@Entity()
 public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -18,6 +18,6 @@ public class Permission {
     @Size(max = 45)
     String name;
 
-    @ManyToMany(mappedBy = "permission")
+    @ManyToMany(mappedBy = "permissions",cascade = CascadeType.ALL)
     private Set<Role> rolePermission = new HashSet<>();
 }
