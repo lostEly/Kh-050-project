@@ -33,10 +33,10 @@ public class EquipmentController {
     }
 
     /**
-     * Getting the procedure by id
+     * Getting the equipment by id
      *
-     * @param id procedure id
-     * @return the procedure by id
+     * @param id equipment id
+     * @return the equipment by id
      */
     @GetMapping(value = "/{id}")
     public ResponseEntity<Equipment> readById(@PathVariable Long id) {
@@ -45,10 +45,10 @@ public class EquipmentController {
     }
 
     /**
-     * Creating new procedure
+     * Creating new equipment
      *
      * @param equipment which should be created
-     * @return the created procedure
+     * @return the created equipment
      */
     @PostMapping("/add-equipment")
     public ResponseEntity<Equipment> create(@RequestBody Equipment equipment) {
@@ -70,7 +70,7 @@ public class EquipmentController {
     }
 
     /**
-     * Partial updating of the procedure
+     * Partial updating of the equipment
      *
      * @param fields is the map of fields to be updated and new values
      * @param id     of the equipment
