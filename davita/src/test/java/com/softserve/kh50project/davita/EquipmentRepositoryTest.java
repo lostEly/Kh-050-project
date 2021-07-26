@@ -40,8 +40,8 @@ public class EquipmentRepositoryTest {
 
     private List<Equipment> equipmentList;
 
-
     private static final String ROOT_URL = "http://localhost:8080";
+
     RestTemplate restTemplate = new RestTemplate();
 
     @BeforeEach
@@ -135,53 +135,52 @@ public class EquipmentRepositoryTest {
         List<Equipment> posts = Arrays.asList(responseEntity.getBody());
         assertNotNull(posts);
     }
+
     @Test
     @Order(8)
     @DisplayName("testGetPostById using URL")
-    public void testGetPostById()
-    {
-        Equipment equipment = restTemplate.getForObject(ROOT_URL+"/equipment/1", Equipment.class);
+    public void testGetPostById() {
+        Equipment equipment = restTemplate.getForObject(ROOT_URL + "/equipment/1", Equipment.class);
         assertNotNull(equipment);
     }
 
 
     @Test
-    @Order(8)
-    @DisplayName("testGetPostById using URL")
-    public void testCreatePost()
-    {
+    @Order(9)
+    @DisplayName("testCreatePost using URL")
+    public void testCreatePost() {
         Equipment equipment = new Equipment();
         equipment.setName("Defibrillators");
         ResponseEntity<Equipment> postResponse =
-                restTemplate.postForEntity(ROOT_URL+"/equipment/add-equipment", equipment, Equipment.class);
+                restTemplate.postForEntity(ROOT_URL + "/equipment/add-equipment", equipment, Equipment.class);
         assertNotNull(postResponse);
         assertNotNull(postResponse.getBody());
     }
 
+
     @Test
-    @Order(7)
-    @DisplayName("delete removes the object in database")
-    public void testUpdatePost()
-    {
+    @Order(10)
+    @DisplayName("testUpdatePost using URL")
+    public void testUpdatePost() {
         int id = 1;
-        Equipment post = restTemplate.getForObject(ROOT_URL+"/equipment/"+id, Equipment.class);
+        Equipment post = restTemplate.getForObject(ROOT_URL + "/equipment/" + id, Equipment.class);
         post.setName("This my updated post1 content");
-        restTemplate.put(ROOT_URL+"/equipment/"+id, post);
-        Equipment updatedPost = restTemplate.getForObject(ROOT_URL+"/equipment/"+id, Equipment.class);
+        restTemplate.put(ROOT_URL + "/equipment/" + id, post);
+        Equipment updatedPost = restTemplate.getForObject(ROOT_URL + "/equipment/" + id, Equipment.class);
         assertNotNull(updatedPost);
     }
 
     @Test
-    public void testDeletePost()
-    {
+    @Order(10)
+    @DisplayName("testDeletePost using URL")
+    public void testDeletePost() {
         Long id = 2L;
-        Equipment equipment = restTemplate.getForObject(ROOT_URL+"/equipment/"+id, Equipment.class);
+        Equipment equipment = restTemplate.getForObject(ROOT_URL + "/equipment/" + id, Equipment.class);
         assertNotNull(equipment);
-        restTemplate.delete(ROOT_URL+"/equipment/"+id);
+        restTemplate.delete(ROOT_URL + "/equipment/" + id);
         try {
-            equipment = restTemplate.getForObject(ROOT_URL+"/equipment/"+id, Equipment.class);
-        }
-        catch (final HttpClientErrorException e) {
+            equipment = restTemplate.getForObject(ROOT_URL + "/equipment/" + id, Equipment.class);
+        } catch (final HttpClientErrorException e) {
             assertEquals(e.getStatusCode(), HttpStatus.OK);
         }
     }
