@@ -1,37 +1,38 @@
 package com.softserve.kh50project.davita.controller;
 
 import com.softserve.kh50project.davita.model.Procedure;
+import com.softserve.kh50project.davita.service.ProcedureService;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/procedures")
+@AllArgsConstructor
 public class ProcedureController {
+
+    @Qualifier(value = "ProcedureServiceImpl")
+    private final ProcedureService procedureService;
 
     /**
      * Getting all procedures by parameters
      *
-     * @param name optional, procedure name
-     * @param cost optional, procedure cost
+     * @param name     optional, procedure name
+     * @param cost     optional, procedure cost
      * @param duration optional, procedure duration
      * @return the list of procedures, return empty list if the procedure wasn't found
      */
     @GetMapping
     public ResponseEntity<List<Procedure>> read(@RequestParam(value = "name", required = false) String name,
                                                 @RequestParam(value = "cost", required = false) Double cost,
-                                                @RequestParam(value = "duration", required = false) LocalTime duration) {
-        Procedure procedure1 = new Procedure();
-        Procedure procedure2 = new Procedure();
-        if (Objects.isNull(name) && Objects.isNull(cost) && Objects.isNull(duration)) {
-            return new ResponseEntity<>(List.of(procedure1, procedure2), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(List.of(procedure1), HttpStatus.OK);
+                                                @RequestParam(value = "duration", required = false) String duration) {
+        List<Procedure> procedures = procedureService.read(name, cost, duration);
+        return new ResponseEntity<>(procedures, HttpStatus.OK);
     }
 
     /**
@@ -42,8 +43,7 @@ public class ProcedureController {
      */
     @GetMapping(value = "/{id}")
     public ResponseEntity<Procedure> readById(@PathVariable Long id) {
-        Procedure procedure = new Procedure();
-        procedure.setProcedureId(id);
+        Procedure procedure = procedureService.readById(id);
         return new ResponseEntity<>(procedure, HttpStatus.OK);
     }
 
@@ -55,32 +55,34 @@ public class ProcedureController {
      */
     @PostMapping("/add-procedure")
     public ResponseEntity<Procedure> create(@RequestBody Procedure procedure) {
-        return new ResponseEntity<>(procedure, HttpStatus.CREATED);
+        Procedure createdProcedure = procedureService.create(procedure);
+        return new ResponseEntity<>(createdProcedure, HttpStatus.CREATED);
     }
 
     /**
      * Updating the procedure
      *
      * @param procedure to be updated
-     * @param id of the procedure
+     * @param id        of the procedure
      * @return updated procedure
      */
     @PutMapping(value = "/{id}")
     public ResponseEntity<Procedure> update(@RequestBody Procedure procedure, @PathVariable Long id) {
-        procedure.setName("New name");
-        return new ResponseEntity<>(procedure, HttpStatus.OK);
+        Procedure updatedProcedure = procedureService.update(procedure, id);
+        return new ResponseEntity<>(updatedProcedure, HttpStatus.OK);
     }
 
     /**
      * Partial updating of the procedure
      *
      * @param fields is the map of fields to be updated and new values
-     * @param id of the procedure
+     * @param id     of the procedure
      * @return updated procedure
      */
     @PatchMapping(value = "/{id}")
     public ResponseEntity<Procedure> patch(@RequestBody Map<String, Object> fields, @PathVariable Long id) {
-        return new ResponseEntity<>(new Procedure(), HttpStatus.OK);
+        Procedure patchedProcedure = procedureService.patch(fields, id);
+        return new ResponseEntity<>(patchedProcedure, HttpStatus.OK);
     }
 
     /**
@@ -91,6 +93,7 @@ public class ProcedureController {
      */
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Procedure> delete(@PathVariable Long id) {
+        procedureService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
