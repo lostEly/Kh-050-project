@@ -47,7 +47,7 @@ public class EquipmentRepositoryTest {
     @BeforeEach
     void setUp() {
         equipmentList = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
             Equipment equipment = new Equipment();
             equipment.setName("equipment " + i);
             equipment = entityManager.persistAndFlush(equipment);
@@ -66,8 +66,8 @@ public class EquipmentRepositoryTest {
     @Order(1)
     @DisplayName("find by id returns correct object")
     void findById() {
-        Equipment procedure = equipmentRepository.findById(5L).get();
-        assertEquals(procedure, equipmentList.get(4));
+        Equipment procedure = equipmentRepository.findById(9L).get();
+        assertEquals(procedure, equipmentList.get(8));
     }
 
 
@@ -76,7 +76,7 @@ public class EquipmentRepositoryTest {
     @DisplayName("find all")
     void findAll() {
         List<Equipment> equipmentList = equipmentRepository.findAll();
-        assertEquals(5, equipmentList.size());
+        assertEquals(10, equipmentList.size());
         assertEquals("equipment 0", equipmentList.get(0).getName());
     }
 
