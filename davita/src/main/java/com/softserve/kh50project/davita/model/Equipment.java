@@ -26,7 +26,6 @@ public class Equipment {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-
     @JsonIgnore
     @ToString.Exclude
     List<Procedure> procedures = new ArrayList<>();
@@ -40,5 +39,4 @@ public class Equipment {
         procedures.remove(procedure);
         procedure.setEquipment(null);
     }
-
 }

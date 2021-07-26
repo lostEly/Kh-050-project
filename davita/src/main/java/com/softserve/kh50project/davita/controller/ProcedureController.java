@@ -53,7 +53,7 @@ public class ProcedureController {
      * @param procedure which should be created
      * @return the created procedure
      */
-    @PostMapping("/add-procedure")
+    @PostMapping
     public ResponseEntity<Procedure> create(@RequestBody Procedure procedure) {
         Procedure createdProcedure = procedureService.create(procedure);
         return new ResponseEntity<>(createdProcedure, HttpStatus.CREATED);
