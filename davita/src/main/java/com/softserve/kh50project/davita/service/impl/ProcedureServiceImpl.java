@@ -1,5 +1,6 @@
 package com.softserve.kh50project.davita.service.impl;
 
+import com.softserve.kh50project.davita.exceptions.ResourceNotFoundException;
 import com.softserve.kh50project.davita.model.Procedure;
 import com.softserve.kh50project.davita.repository.ProcedureRepository;
 import com.softserve.kh50project.davita.service.ProcedureService;
@@ -11,20 +12,17 @@ import org.springframework.util.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 @Service
 @AllArgsConstructor
 public class ProcedureServiceImpl implements ProcedureService {
     private final ProcedureRepository procedureRepository;
 
-    // @TODO
-    // replace NoSuchElementException with ResourceNotFoundException
     @Override
     public Procedure readById(Long id) {
         return procedureRepository
                 .findById(id)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override
