@@ -25,11 +25,7 @@ public class RoleController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
     public Role getRoleById(@PathVariable Long id) {
-        Role role = roleService.readById(id);
-        if (role == null) {
-            throw new NoSuchElementException("There is no role with id = " + id);
-        }
-        return role;
+        return roleService.readById(id);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
