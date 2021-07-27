@@ -17,4 +17,6 @@ public interface ProcedureService {
     Procedure patch(Map<String, Object> fields, Long id);
 
     void delete(Long id);
+
+    void registerEquipment(Long procedureId, Long equipmentId);
 }

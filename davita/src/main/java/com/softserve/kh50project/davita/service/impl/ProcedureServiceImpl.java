@@ -5,6 +5,7 @@ import com.softserve.kh50project.davita.model.Procedure;
 import com.softserve.kh50project.davita.repository.ProcedureRepository;
 import com.softserve.kh50project.davita.service.ProcedureService;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
@@ -56,6 +57,11 @@ public class ProcedureServiceImpl implements ProcedureService {
     @Override
     public void delete(Long id) {
         procedureRepository.deleteById(id);
+    }
+
+    @Override
+    public void registerEquipment(Long procedureId, Long equipmentId) {
+        procedureRepository.registerEquipment(procedureId, equipmentId);
     }
 
 }
