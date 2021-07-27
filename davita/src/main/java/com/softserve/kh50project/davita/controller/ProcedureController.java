@@ -86,7 +86,7 @@ public class ProcedureController {
     }
 
     /**
-     * Registering equipment to the procedure
+     * Registering equipment for the procedure
      *
      * @param procedureId of procedure to register equipment
      * @param equipmentId of equipment to register
