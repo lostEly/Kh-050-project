@@ -86,6 +86,18 @@ public class ProcedureController {
     }
 
     /**
+     * Registering equipment to the procedure
+     *
+     * @param procedureId of procedure to register equipment
+     * @param equipmentId of equipment to register
+     */
+    @PatchMapping(value = "/{procedureId}/register-equipment/{equipmentId}")
+    public void registerEquipment(@PathVariable Long procedureId,
+                                  @PathVariable Long equipmentId) {
+        procedureService.registerEquipment(procedureId, equipmentId);
+    }
+
+    /**
      * Deleting the procedure by id
      *
      * @param id of the procedure
