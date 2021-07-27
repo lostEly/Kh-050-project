@@ -1,5 +1,6 @@
 package com.softserve.kh50project.davita.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,13 +16,14 @@ public class Doctor extends User {
 
     @Column(nullable = false)
     @Size(max = 45)
-    String specialization;
+    private String specialization;
 
     @Column(nullable = false)
     @Size(max = 45)
-    String certificateNumber;
+    private String certificateNumber;
 
+    @JsonManagedReference
     @Column
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
-    List<Order> orders;
+    private List<Order> orders;
 }
