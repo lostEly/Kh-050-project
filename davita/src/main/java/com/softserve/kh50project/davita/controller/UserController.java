@@ -27,9 +27,6 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id){
         User user = userService.readById(id);
-        if (user == null){
-            throw new NoSuchElementException("There is no user with id = " + id);
-        }
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
