@@ -44,5 +44,5 @@ public interface ProcedureRepository extends JpaRepository<Procedure, Long>, Jpa
     @Query(
             value = "update procedure set equipment_equipment_id = :equipmentId where procedure_id = :procedureId",
             nativeQuery = true)
-    void registerEquipment(@Param("procedureId") Long procedureId, @Param("equipmentId") Long equipmentId) throws DataIntegrityViolationException;
+    void registerEquipment(@Param("procedureId") Long procedureId, @Param("equipmentId") Long equipmentId);
 }
