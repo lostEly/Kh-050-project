@@ -5,7 +5,6 @@ import com.softserve.kh50project.davita.model.Procedure;
 import com.softserve.kh50project.davita.repository.ProcedureRepository;
 import com.softserve.kh50project.davita.service.ProcedureService;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
@@ -50,7 +49,7 @@ public class ProcedureServiceImpl implements ProcedureService {
             Field field = ReflectionUtils.findField(Procedure.class, k);
             field.setAccessible(true);
             ReflectionUtils.setField(field, procedure, v);
-                });
+        });
         return procedureRepository.save(procedure);
     }
 
