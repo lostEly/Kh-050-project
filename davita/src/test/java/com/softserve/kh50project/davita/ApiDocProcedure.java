@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.kh50project.davita.model.Equipment;
 import com.softserve.kh50project.davita.model.Procedure;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +60,7 @@ public class ApiDocProcedure {
     }
 
     @Test
+    @Disabled
     public void indexExample() throws Exception {
         this.mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
@@ -66,6 +69,7 @@ public class ApiDocProcedure {
     }
 
     @Test
+    @Order(2)
     public void crudGetExample() throws Exception {
 
         Map<String, Object> crud = new HashMap<>();
@@ -75,7 +79,7 @@ public class ApiDocProcedure {
         crud.put("cost", 10.20);
         crud.put("equipment_id", 10L);
 
-        String tagLocation = this.mockMvc.perform(get("/procedures/{id}", 30L).contentType(MediaTypes.HAL_JSON)
+        String tagLocation = this.mockMvc.perform(get("/procedures/{id}", 21L).contentType(MediaTypes.HAL_JSON)
                 .content(this.objectMapper.writeValueAsString(crud)))
                 .andExpect(status().isOk())
                 .andReturn()
@@ -86,7 +90,7 @@ public class ApiDocProcedure {
 
         ConstraintDescriptions desc = new ConstraintDescriptions(Equipment.class);
 
-        this.mockMvc.perform(get("/procedures/{id}", 30L).contentType(MediaTypes.HAL_JSON)
+        this.mockMvc.perform(get("/procedures/{id}", 21L).contentType(MediaTypes.HAL_JSON)
                 .content(this.objectMapper.writeValueAsString(crud)))
                 .andExpect(status().isOk())
                 .andDo(document("procedures-get-example", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
@@ -103,17 +107,7 @@ public class ApiDocProcedure {
 
     @Test
     public void crudCreateExample() throws Exception {
-        Equipment equipment = new Equipment();
-        equipment.setEquipmentId(156L);
-        equipment.setName("gjfngjkd");
 
-
-        Procedure procedure = new Procedure();
-        procedure.setProcedureId(210L);
-        procedure.setName("kgflkg");
-        procedure.setDuration(LocalTime.now());
-        procedure.setCost(10.3);
-        procedure.setEquipment(equipment);
 
 
         Map<String, Object> crud = new HashMap<>();
@@ -122,15 +116,10 @@ public class ApiDocProcedure {
         crud.put("name", "Blood");
 
 
-/*        String cru = "\"name\" : \"Sample Model\",\n" +
-                "  \"id\" : 40L,\n" +
-                "  \"duration\" : 10:15:30,\n" +
-                "  \"name\" : Sample Model,\n" +
-                "  \"duration\" : 10.30,\n" +
-                "  \"equipment_id\" : 20L,\n";*/
+
 
         String tagLocation = this.mockMvc.perform(post("/procedures").contentType(MediaTypes.HAL_JSON)
-                .content(this.objectMapper.writeValueAsString(procedure)))
+                .content(this.objectMapper.writeValueAsString(crud)))
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()

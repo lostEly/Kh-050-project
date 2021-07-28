@@ -1,7 +1,6 @@
 package com.softserve.kh50project.davita;
 
 
-
 import static java.util.Collections.singletonList;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
@@ -25,6 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,9 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.constraints.ConstraintDescriptions;
+
 import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
+
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -47,10 +50,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.kh50project.davita.model.Equipment;
 import com.softserve.kh50project.davita.DavitaApplication;
 
-@ExtendWith({ RestDocumentationExtension.class, SpringExtension.class })
+@ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest(classes = DavitaApplication.class)
 public class ApiDocEquipment {
-
 
 
     @Autowired
@@ -67,6 +69,7 @@ public class ApiDocEquipment {
     }
 
     @Test
+    @Disabled
     public void indexExample() throws Exception {
         this.mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
@@ -75,6 +78,7 @@ public class ApiDocEquipment {
     }
 
     @Test
+    @Order(2)
     public void crudGetExample() throws Exception {
 
         Map<String, Object> crud = new HashMap<>();
@@ -97,19 +101,15 @@ public class ApiDocEquipment {
                 .andExpect(status().isOk())
                 .andDo(document("equipment-get-example", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
                         requestFields(fieldWithPath("id").description("The id of the input" + collectionToDelimitedString(desc.descriptionsForProperty("id"), ". ")),
-                        fieldWithPath("name").description("The title of the input"), fieldWithPath("tags").description("An array of tag resource URIs"))));
+                                fieldWithPath("name").description("The title of the input"), fieldWithPath("tags").description("An array of tag resource URIs"))));
     }
 
 
-
-
-
-
     @Test
+    @Order(1)
     public void crudCreateExample() throws Exception {
         Map<String, Object> crud = new HashMap<>();
         crud.put("equipment_id", 1L);
-
         crud.put("name", "Sample Model");
 
         String tagLocation = this.mockMvc.perform(post("/equipment/add-equipment").contentType(MediaTypes.HAL_JSON)
@@ -125,12 +125,12 @@ public class ApiDocEquipment {
                 .content(this.objectMapper.writeValueAsString(crud)))
                 .andExpect(status().isCreated())
                 .andDo(document("equipment-create-example", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()), requestFields(fieldWithPath("equipment_id").description("The id of the input"), fieldWithPath("name").description("The title of the input")
-                       , fieldWithPath("tags").description("An array of tag resource URIs"))));
+                        , fieldWithPath("tags").description("An array of tag resource URIs"))));
     }
 
 
-
     @Test
+    @Order(4)
     public void crudDeleteExample() throws Exception {
         this.mockMvc.perform(delete("/equipment/{id}", 2))
                 .andExpect(status().isOk())
@@ -139,6 +139,7 @@ public class ApiDocEquipment {
 
 
     @Test
+    @Disabled
     public void crudPatchExample() throws Exception {
 
         Map<String, String> tag = new HashMap<>();
@@ -161,6 +162,7 @@ public class ApiDocEquipment {
 
 
     @Test
+    @Order(3)
     public void crudPutExample() throws Exception {
         Map<String, Object> tag = new HashMap<>();
         tag.put("equipment_id", 2L);

@@ -136,17 +136,9 @@ public class EquipmentRepositoryTest {
         assertNotNull(posts);
     }
 
+
     @Test
     @Order(8)
-    @DisplayName("testGetPostById using URL")
-    public void testGetPostById() {
-        Equipment equipment = restTemplate.getForObject(ROOT_URL + "/equipment/1", Equipment.class);
-        assertNotNull(equipment);
-    }
-
-
-    @Test
-    @Order(9)
     @DisplayName("testCreatePost using URL")
     public void testCreatePost() {
         Equipment equipment = new Equipment();
@@ -156,6 +148,17 @@ public class EquipmentRepositoryTest {
         assertNotNull(postResponse);
         assertNotNull(postResponse.getBody());
     }
+
+    @Test
+    @Order(9)
+    @DisplayName("testGetPostById using URL")
+    public void testGetPostById() {
+        Equipment equipment = restTemplate.getForObject(ROOT_URL + "/equipment/1", Equipment.class);
+        assertNotNull(equipment);
+    }
+
+
+
 
 
     @Test
@@ -171,7 +174,8 @@ public class EquipmentRepositoryTest {
     }
 
     @Test
-    @Order(10)
+    @Disabled
+    @Order(11)
     @DisplayName("testDeletePost using URL")
     public void testDeletePost() {
         Long id = 2L;
