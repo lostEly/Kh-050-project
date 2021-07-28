@@ -20,8 +20,6 @@ public class ProcedureController {
     @Qualifier(value = "ProcedureServiceImpl")
     private final ProcedureService procedureService;
 
-    private final ModelMapper modelMapper;
-
     /**
      * Getting all procedures by parameters
      *
