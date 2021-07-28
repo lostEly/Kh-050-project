@@ -18,7 +18,7 @@ import java.time.LocalTime;
 public class Procedure {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long procedureId;
+     Long procedureId;
 
     @Column(nullable = false)
     @Size(max = 45)

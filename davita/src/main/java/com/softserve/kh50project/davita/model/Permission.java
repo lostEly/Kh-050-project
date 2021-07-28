@@ -18,6 +18,6 @@ public class Permission {
     @Size(max = 45)
     String name;
 
-    @ManyToMany(mappedBy = "permissions",cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "permissions")
     private Set<Role> rolePermission = new HashSet<>();
 }
