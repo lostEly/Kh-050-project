@@ -62,5 +62,4 @@ public class ProcedureServiceImpl implements ProcedureService {
     public void registerEquipment(Long procedureId, Long equipmentId) {
         procedureRepository.registerEquipment(procedureId, equipmentId);
     }
-
 }
