@@ -32,10 +32,10 @@ public class ProcedureController {
      * @return the list of procedures, return empty list if the procedure wasn't found
      */
     @GetMapping
-    public ResponseEntity<List<Procedure>> read(@RequestParam(value = "name", required = false) String name,
+    public ResponseEntity<List<ProcedureDto>> read(@RequestParam(value = "name", required = false) String name,
                                                 @RequestParam(value = "cost", required = false) Double cost,
                                                 @RequestParam(value = "duration", required = false) String duration) {
-        List<Procedure> procedures = procedureService.read(name, cost, duration);
+        List<ProcedureDto> procedures = procedureService.read(name, cost, duration);
         return new ResponseEntity<>(procedures, HttpStatus.OK);
     }
 
@@ -47,8 +47,7 @@ public class ProcedureController {
      */
     @GetMapping(value = "/{id}")
     public ResponseEntity<ProcedureDto> readById(@PathVariable Long id) {
-        Procedure procedure = procedureService.readById(id);
-        ProcedureDto procedureDto = convertProcedureToDto(procedure);
+        ProcedureDto procedureDto = procedureService.readById(id);
         return new ResponseEntity<>(procedureDto, HttpStatus.OK);
     }
 
@@ -60,9 +59,7 @@ public class ProcedureController {
      */
     @PostMapping
     public ResponseEntity<ProcedureDto> create(@RequestBody ProcedureDto procedureDto) {
-        Procedure receivedProcedure = convertDtoToProcedure(procedureDto);
-        procedureService.create(receivedProcedure);
-        ProcedureDto createdProcedure = convertProcedureToDto(receivedProcedure);
+        ProcedureDto createdProcedure = procedureService.create(procedureDto);
         return new ResponseEntity<>(createdProcedure, HttpStatus.CREATED);
     }
 
@@ -75,10 +72,8 @@ public class ProcedureController {
      */
     @PutMapping(value = "/{id}")
     public ResponseEntity<ProcedureDto> update(@RequestBody ProcedureDto procedureDto, @PathVariable Long id) {
-        Procedure receivedProcedure = convertDtoToProcedure(procedureDto);
-        procedureService.update(receivedProcedure, id);
-        ProcedureDto updatedProcedure = convertProcedureToDto(receivedProcedure);
-        return new ResponseEntity<>(updatedProcedure, HttpStatus.OK);
+        ProcedureDto updatedProcedureDto = procedureService.update(procedureDto, id);
+        return new ResponseEntity<>(updatedProcedureDto, HttpStatus.OK);
     }
 
     /**
@@ -90,8 +85,7 @@ public class ProcedureController {
      */
     @PatchMapping(value = "/{id}")
     public ResponseEntity<ProcedureDto> patch(@RequestBody Map<String, Object> fields, @PathVariable Long id) {
-        Procedure patchedProcedure = procedureService.patch(fields, id);
-        ProcedureDto patchedProcedureDto = convertProcedureToDto(patchedProcedure);
+        ProcedureDto patchedProcedureDto = procedureService.patch(fields, id);
         return new ResponseEntity<>(patchedProcedureDto, HttpStatus.OK);
     }
 
@@ -117,29 +111,5 @@ public class ProcedureController {
     public ResponseEntity<?> delete(@PathVariable Long id) {
         procedureService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    /**
-     * Converting procedure to DTO
-     *
-     * @param procedure to be converted
-     * @return ProcedureDTO object
-     */
-    private ProcedureDto convertProcedureToDto(Procedure procedure) {
-        ProcedureDto procedureDto = modelMapper.map(procedure, ProcedureDto.class);
-        procedureDto.convertLocalTimeToString(procedure.getDuration());
-        return procedureDto;
-    }
-
-    /**
-     * Converting ProcedureDto to Procedure
-     *
-     * @param procedureDto to be converted
-     * @return Procedure object
-     */
-    private Procedure convertDtoToProcedure(ProcedureDto procedureDto) {
-        Procedure procedure = modelMapper.map(procedureDto, Procedure.class);
-        procedure.setDuration(procedureDto.convertStringToLocalTime());
-        return procedure;
     }
 }
