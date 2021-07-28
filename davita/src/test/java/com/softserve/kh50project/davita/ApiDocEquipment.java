@@ -112,7 +112,7 @@ public class ApiDocEquipment {
         crud.put("equipment_id", 1L);
         crud.put("name", "Sample Model");
 
-        String tagLocation = this.mockMvc.perform(post("/equipment/add-equipment").contentType(MediaTypes.HAL_JSON)
+        String tagLocation = this.mockMvc.perform(post("/equipment").contentType(MediaTypes.HAL_JSON)
                 .content(this.objectMapper.writeValueAsString(crud)))
                 .andExpect(status().isCreated())
                 .andReturn()
@@ -121,7 +121,7 @@ public class ApiDocEquipment {
 
         crud.put("tags", singletonList(tagLocation));
 
-        this.mockMvc.perform(post("/equipment/add-equipment").contentType(MediaTypes.HAL_JSON)
+        this.mockMvc.perform(post("/equipment").contentType(MediaTypes.HAL_JSON)
                 .content(this.objectMapper.writeValueAsString(crud)))
                 .andExpect(status().isCreated())
                 .andDo(document("equipment-create-example", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()), requestFields(fieldWithPath("equipment_id").description("The id of the input"), fieldWithPath("name").description("The title of the input")
