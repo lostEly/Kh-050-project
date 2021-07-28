@@ -183,7 +183,7 @@ public class EquipmentRepositoryTest {
         Equipment equipment = new Equipment();
         equipment.setName("Defibrillators");
         ResponseEntity<Equipment> postResponse =
-                restTemplate.postForEntity(ROOT_URL + "/equipment/add-equipment", equipment, Equipment.class);
+                restTemplate.postForEntity(ROOT_URL + "/equipment", equipment, Equipment.class);
         assertNotNull(postResponse);
         assertNotNull(postResponse.getBody());
     }
