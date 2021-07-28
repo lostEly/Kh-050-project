@@ -61,9 +61,5 @@ public class ProcedureServiceImpl implements ProcedureService {
     @Override
     public void registerEquipment(Long procedureId, Long equipmentId) {
         procedureRepository.registerEquipment(procedureId, equipmentId);
-    }
-    
-    
-    
-    
+    } 
 }
