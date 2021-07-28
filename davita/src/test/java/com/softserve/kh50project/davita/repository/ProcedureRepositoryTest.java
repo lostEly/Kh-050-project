@@ -1,5 +1,6 @@
 package com.softserve.kh50project.davita.repository;
 
+import com.softserve.kh50project.davita.model.Equipment;
 import com.softserve.kh50project.davita.model.Procedure;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -22,6 +22,9 @@ class ProcedureRepositoryTest {
 
     @Autowired
     private ProcedureRepository procedureRepository;
+
+    @Autowired
+    private EquipmentRepository equipmentRepository;
 
     @Autowired
     private TestEntityManager entityManager;
@@ -145,6 +148,24 @@ class ProcedureRepositoryTest {
         procedureRepository.delete(p);
         assertFalse(procedureRepository.findById(p.getProcedureId()).isPresent());
     }
+
+    @Test
+    @Order(11)
+    @DisplayName("register equipment works properly")
+    void registerEquipment() {
+        Procedure procedure = createProcedure();
+        Equipment equipment = new Equipment();
+        equipment.setName("equipment");
+        equipment.addProcedure(procedure);
+        equipmentRepository.save(equipment);
+        procedureRepository.registerEquipment(procedure.getProcedureId(), equipment.getEquipmentId());
+        Procedure procedure1 = procedureRepository.findById(procedure.getProcedureId()).get();
+        Equipment equipment1 = procedure1.getEquipment();
+        assertNotNull(equipment1);
+        String equipmentName = equipment1.getName();
+        assertEquals("equipment", equipmentName);
+    }
+
 
     private Procedure createProcedure() {
         Procedure procedure = new Procedure();
