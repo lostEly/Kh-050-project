@@ -1,7 +1,6 @@
 package com.softserve.kh50project.davita.controller;
 
 import com.softserve.kh50project.davita.dto.ProcedureDto;
-import com.softserve.kh50project.davita.model.Procedure;
 import com.softserve.kh50project.davita.service.ProcedureService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -33,8 +32,8 @@ public class ProcedureController {
      */
     @GetMapping
     public ResponseEntity<List<ProcedureDto>> read(@RequestParam(value = "name", required = false) String name,
-                                                @RequestParam(value = "cost", required = false) Double cost,
-                                                @RequestParam(value = "duration", required = false) String duration) {
+                                                   @RequestParam(value = "cost", required = false) Double cost,
+                                                   @RequestParam(value = "duration", required = false) String duration) {
         List<ProcedureDto> procedures = procedureService.read(name, cost, duration);
         return new ResponseEntity<>(procedures, HttpStatus.OK);
     }
