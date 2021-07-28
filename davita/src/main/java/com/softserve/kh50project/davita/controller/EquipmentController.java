@@ -45,7 +45,7 @@ public class EquipmentController {
      * @param equipment which should be created
      * @return the created equipment
      */
-    @PostMapping("/add-equipment")
+    @PostMapping("")
     public ResponseEntity<Equipment> create(@RequestBody Equipment equipment) {
         Equipment createdEquipment= equipmentService.create(equipment);
         return new ResponseEntity<>(createdEquipment, HttpStatus.CREATED);
