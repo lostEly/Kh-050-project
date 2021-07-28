@@ -1,6 +1,6 @@
 package com.softserve.kh50project.davita.controller;
 
-import com.softserve.kh50project.davita.model.Patient;
+import com.softserve.kh50project.davita.dto.PatientDto;
 import com.softserve.kh50project.davita.service.PatientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +27,8 @@ public class PatientController {
      * @return the patient by id
      */
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Patient> readById(@PathVariable Long id) {
-        Patient patient = patientService.readById(id);
+    public ResponseEntity<PatientDto> readById(@PathVariable Long id) {
+        PatientDto patient = patientService.readById(id);
         return new ResponseEntity<>(patient, HttpStatus.OK);
     }
 
@@ -41,36 +41,36 @@ public class PatientController {
      * @return the list of patients, return empty list if the patient wasn't found
      */
     @GetMapping
-    public ResponseEntity<List<Patient>> readAll(
+    public ResponseEntity<List<PatientDto>> readAll(
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "lastName", required = false) String lastName,
             @RequestParam(value = "dateOfBirth", required = false) LocalDate dateOfBirth) {
-        List<Patient> patients = patientService.readAll(name, lastName, dateOfBirth);
+        List<PatientDto> patients = patientService.readAll(name, lastName, dateOfBirth);
         return new ResponseEntity<>(patients, HttpStatus.OK);
     }
 
     /**
-     * Creating a patient
+     * Creating a patientDto
      *
-     * @param patient which should be create
-     * @return the created patient
+     * @param patientDto which should be create
+     * @return the created patientDto
      */
     @PostMapping
-    public ResponseEntity<Patient> create(@RequestBody Patient patient) {
-        Patient createdPatient = patientService.create(patient);
+    public ResponseEntity<PatientDto> create(@RequestBody PatientDto patientDto) {
+        PatientDto createdPatient = patientService.create(patientDto);
         return new ResponseEntity<>(createdPatient, HttpStatus.CREATED);
     }
 
     /**
-     * Updating the patient
+     * Updating the patientDto
      *
-     * @param patient which should be update
+     * @param patientDto which should be update
      * @param id
-     * @return the updated patient
+     * @return the updated patientDto
      */
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Patient> update(@RequestBody Patient patient, @PathVariable Long id) {
-        Patient updatedPatient = patientService.update(patient, id);
+    public ResponseEntity<PatientDto> update(@RequestBody PatientDto patientDto, @PathVariable Long id) {
+        PatientDto updatedPatient = patientService.update(patientDto, id);
         return new ResponseEntity<>(updatedPatient, HttpStatus.OK);
     }
 
@@ -81,8 +81,8 @@ public class PatientController {
      * @return partly updated patient
      */
     @PatchMapping(value = "/{id}")
-    public ResponseEntity<Patient> patch(@RequestBody Map<String, Object> fields, @PathVariable Long id) {
-        Patient patchedPatient = patientService.patch(fields, id);
+    public ResponseEntity<PatientDto> patch(@RequestBody Map<String, Object> fields, @PathVariable Long id) {
+        PatientDto patchedPatient = patientService.patch(fields, id);
         return new ResponseEntity<>(patchedPatient, HttpStatus.OK);
     }
 

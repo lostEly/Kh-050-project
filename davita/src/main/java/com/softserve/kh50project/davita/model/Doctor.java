@@ -1,8 +1,8 @@
 package com.softserve.kh50project.davita.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -22,7 +22,7 @@ public class Doctor extends User {
     @Size(max = 45)
     private String certificateNumber;
 
-    @JsonManagedReference
+    @ToString.Exclude
     @Column
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
     private List<Order> orders;

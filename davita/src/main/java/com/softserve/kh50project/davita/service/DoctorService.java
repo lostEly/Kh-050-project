@@ -1,21 +1,21 @@
 package com.softserve.kh50project.davita.service;
 
-import com.softserve.kh50project.davita.model.Doctor;
+import com.softserve.kh50project.davita.dto.DoctorDto;
 
 import java.util.List;
 import java.util.Map;
 
 public interface DoctorService {
 
-    Doctor readById(Long id);
+    DoctorDto readById(Long id);
 
-    List<Doctor> readAll(String specialization);
+    List<DoctorDto> readAll(String specialization);
 
-    Doctor create(Doctor doctor);
+    DoctorDto create(DoctorDto doctorDto);
 
-    Doctor update(Doctor doctor, Long id);
+    DoctorDto update(DoctorDto doctorDto, Long id);
 
-    Doctor patch(Map<String, Object> fields, Long id);
+    DoctorDto patch(Map<String, Object> fields, Long id);
 
     void delete(Long id);
 }

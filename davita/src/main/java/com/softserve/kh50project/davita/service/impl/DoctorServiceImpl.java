@@ -1,5 +1,8 @@
 package com.softserve.kh50project.davita.service.impl;
 
+import com.softserve.kh50project.davita.dto.DoctorDto;
+import com.softserve.kh50project.davita.exceptions.ResourceNotFoundException;
+import com.softserve.kh50project.davita.mapper.DoctorMapper;
 import com.softserve.kh50project.davita.model.Doctor;
 import com.softserve.kh50project.davita.repository.DoctorRepository;
 import com.softserve.kh50project.davita.service.DoctorService;
@@ -10,46 +13,57 @@ import org.springframework.util.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class DoctorServiceImpl implements DoctorService {
 
     private final DoctorRepository doctorRepository;
+    private final DoctorMapper doctorMapper;
 
-    public DoctorServiceImpl(DoctorRepository doctorRepository) {
+    public DoctorServiceImpl(DoctorRepository doctorRepository, DoctorMapper doctorMapper) {
         this.doctorRepository = doctorRepository;
+        this.doctorMapper = doctorMapper;
     }
 
     @Override
-    public Doctor readById(Long id) {
-        return doctorRepository.findById(id).orElse(null);
+    public DoctorDto readById(Long id) {
+        return doctorRepository.findById(id)
+                .map(doctorMapper::mapTo)
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor with id " + id + " "));
     }
 
     @Override
-    public List<Doctor> readAll(String specialization) {
-        return doctorRepository.findAll(DoctorSpecification.create(specialization));
+    public List<DoctorDto> readAll(String specialization) {
+        return doctorRepository.findAll(DoctorSpecification.create(specialization)).stream()
+                .map(doctorMapper::mapTo)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Doctor create(Doctor doctor) {
-        return doctorRepository.save(doctor);
+    public DoctorDto create(DoctorDto doctorDto) {
+        Doctor doctor = doctorMapper.mapFrom(doctorDto);
+        return doctorMapper.mapTo(doctorRepository.save(doctor));
     }
 
     @Override
-    public Doctor update(Doctor doctor, Long id) {
-        doctor.setUserId(id);
-        return doctorRepository.save(doctor);
+    public DoctorDto update(DoctorDto doctorDto, Long id) {
+        doctorDto.setUserId(id);
+        Doctor doctor = doctorMapper.mapFrom(doctorDto);
+        return doctorMapper.mapTo(doctorRepository.save(doctor));
     }
 
     @Override
-    public Doctor patch(Map<String, Object> fields, Long id) {
-        Doctor doctor = readById(id);
+    public DoctorDto patch(Map<String, Object> fields, Long id) {
+        DoctorDto doctorDto = readById(id);
         fields.forEach((k, v) -> {
-            Field field = ReflectionUtils.findField(Doctor.class, k);
+            Field field = ReflectionUtils.findField(DoctorDto.class, k);
             field.setAccessible(true);
-            ReflectionUtils.setField(field, doctor, v);
+            ReflectionUtils.setField(field, doctorDto, v);
         });
-        return doctorRepository.save(doctor);
+
+        Doctor doctor = doctorMapper.mapFrom(doctorDto);
+        return doctorMapper.mapTo(doctorRepository.save(doctor));
     }
 
     @Override

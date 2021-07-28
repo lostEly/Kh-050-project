@@ -1,6 +1,8 @@
 package com.softserve.kh50project.davita.service.impl;
 
-
+import com.softserve.kh50project.davita.dto.PatientDto;
+import com.softserve.kh50project.davita.exceptions.ResourceNotFoundException;
+import com.softserve.kh50project.davita.mapper.PatientMapper;
 import com.softserve.kh50project.davita.model.Patient;
 import com.softserve.kh50project.davita.repository.PatientRepository;
 import com.softserve.kh50project.davita.service.PatientService;
@@ -12,46 +14,58 @@ import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository patientRepository;
 
-    public PatientServiceImpl(PatientRepository patientRepository) {
+    private final PatientMapper patientMapper;
+
+    public PatientServiceImpl(PatientRepository patientRepository, PatientMapper patientMapper) {
         this.patientRepository = patientRepository;
+        this.patientMapper = patientMapper;
     }
 
     @Override
-    public Patient readById(Long id) {
-        return patientRepository.findById(id).orElse(null);
+    public PatientDto readById(Long id) {
+        return patientRepository.findById(id)
+                .map(patientMapper::mapTo)
+                .orElseThrow(()-> new ResourceNotFoundException("Patient with id " + id + " "));
     }
 
     @Override
-    public List<Patient> readAll(String name, String lastName, LocalDate dateOfBirth) {
-        return patientRepository.findAll(PatientSpecification.create(name, lastName, dateOfBirth));
+    public List<PatientDto> readAll(String name, String lastName, LocalDate dateOfBirth) {
+        return patientRepository.findAll(PatientSpecification.create(name, lastName, dateOfBirth)).stream()
+                .map(patientMapper::mapTo)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Patient create(Patient patient) {
-        return patientRepository.save(patient);
+    public PatientDto create(PatientDto patientDto) {
+        Patient patient = patientMapper.mapFrom(patientDto);
+        return patientMapper.mapTo(patientRepository.save(patient));
     }
 
     @Override
-    public Patient update(Patient patient, Long id) {
-        patient.setUserId(id);
-        return patientRepository.save(patient);
+    public PatientDto update(PatientDto patientDto, Long id) {
+        patientDto.setUserId(id);
+        Patient patient = patientMapper.mapFrom(patientDto);
+        return patientMapper.mapTo(patientRepository.save(patient));
     }
 
     @Override
-    public Patient patch(Map<String, Object> fields, Long id) {
-        Patient patient = readById(id);
+    public PatientDto patch(Map<String, Object> fields, Long id) {
+        PatientDto patientDto = readById(id);
         fields.forEach((k, v) -> {
-            Field field = ReflectionUtils.findField(Patient.class, k);
+            Field field = ReflectionUtils.findField(PatientDto.class, k);
             field.setAccessible(true);
-            ReflectionUtils.setField(field, patient, v);
+            ReflectionUtils.setField(field, patientDto, v);
         });
-        return patientRepository.save(patient);
+
+        Patient patient = patientMapper.mapFrom(patientDto);
+        return patientMapper.mapTo(patientRepository.save(patient));
     }
 
     @Override

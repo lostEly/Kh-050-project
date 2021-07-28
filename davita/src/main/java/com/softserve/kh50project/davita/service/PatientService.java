@@ -1,21 +1,21 @@
 package com.softserve.kh50project.davita.service;
 
-import com.softserve.kh50project.davita.model.Patient;
+import com.softserve.kh50project.davita.dto.PatientDto;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 public interface PatientService {
-    Patient readById(Long id);
+    PatientDto readById(Long id);
 
-    List<Patient> readAll(String name, String lastName, LocalDate dateOfBirth);
+    List<PatientDto> readAll(String name, String lastName, LocalDate dateOfBirth);
 
-    Patient create(Patient patient);
+    PatientDto create(PatientDto patientDto);
 
-    Patient update(Patient patient, Long id);
+    PatientDto update(PatientDto patientDto, Long id);
 
-    Patient patch(Map<String, Object> fields, Long id);
+    PatientDto patch(Map<String, Object> fields, Long id);
 
     void delete(Long id);
 }
