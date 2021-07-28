@@ -1,4 +1,4 @@
-package com.softserve.kh50project.davita.service;
+package com.softserve.kh50project.davita.service.impl;
 
 import com.softserve.kh50project.davita.exceptions.ResourceNotFoundException;
 import com.softserve.kh50project.davita.model.Procedure;
@@ -56,6 +56,11 @@ public class ProcedureServiceImpl implements ProcedureService {
     @Override
     public void delete(Long id) {
         procedureRepository.deleteById(id);
+    }
+
+    @Override
+    public void registerEquipment(Long procedureId, Long equipmentId) {
+        procedureRepository.registerEquipment(procedureId, equipmentId);
     }
 
 }

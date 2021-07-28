@@ -1,6 +1,7 @@
 package com.softserve.kh50project.davita.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -8,7 +9,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
+@Data
 @Getter
 @Setter
 @Entity(name = "equipment")
@@ -29,6 +30,14 @@ public class Equipment {
     @JsonIgnore
     @ToString.Exclude
     List<Procedure> procedures = new ArrayList<>();
+    public Equipment() {
+
+    }
+    public Equipment(Long id, String name) {
+        super();
+        this.equipmentId = id;
+        this.name = name;
+    }
 
     public void addProcedure(Procedure procedure) {
         procedures.add(procedure);

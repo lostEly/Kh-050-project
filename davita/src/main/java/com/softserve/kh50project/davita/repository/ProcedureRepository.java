@@ -1,12 +1,17 @@
 package com.softserve.kh50project.davita.repository;
 
 import com.softserve.kh50project.davita.model.Procedure;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.Predicate;
+import javax.transaction.Transactional;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,4 +38,11 @@ public interface ProcedureRepository extends JpaRepository<Procedure, Long>, Jpa
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
+
+    @Transactional
+    @Modifying
+    @Query(
+            value = "update procedure set equipment_equipment_id = :equipmentId where procedure_id = :procedureId",
+            nativeQuery = true)
+    void registerEquipment(@Param("procedureId") Long procedureId, @Param("equipmentId") Long equipmentId);
 }

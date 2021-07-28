@@ -11,8 +11,6 @@ import java.time.LocalTime;
 public class DavitaApplication {
 
     public static void main(String[] args) {
-
-
         SpringApplication.run(DavitaApplication.class, args);
     }
 

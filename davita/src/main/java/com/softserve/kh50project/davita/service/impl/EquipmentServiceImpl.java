@@ -1,12 +1,11 @@
-package com.softserve.kh50project.davita.service;
+package com.softserve.kh50project.davita.service.impl;
 
+import com.softserve.kh50project.davita.exceptions.ResourceNotFoundException;
 import com.softserve.kh50project.davita.model.Equipment;
 import com.softserve.kh50project.davita.model.Procedure;
 import com.softserve.kh50project.davita.repository.EquipmentRepository;
+import com.softserve.kh50project.davita.service.EquipmentService;
 import lombok.AllArgsConstructor;
-
-
-
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -23,12 +22,11 @@ public class EquipmentServiceImpl implements EquipmentService {
 
     private final EquipmentRepository equipmentRepository;
 
-
     @Override
     public Equipment readById(Long id) {
         return equipmentRepository
                 .findById(id)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override

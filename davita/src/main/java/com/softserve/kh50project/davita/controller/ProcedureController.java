@@ -1,4 +1,5 @@
 package com.softserve.kh50project.davita.controller;
+
 import com.softserve.kh50project.davita.model.Procedure;
 import com.softserve.kh50project.davita.service.ProcedureService;
 import lombok.AllArgsConstructor;
@@ -82,6 +83,18 @@ public class ProcedureController {
     public ResponseEntity<Procedure> patch(@RequestBody Map<String, Object> fields, @PathVariable Long id) {
         Procedure patchedProcedure = procedureService.patch(fields, id);
         return new ResponseEntity<>(patchedProcedure, HttpStatus.OK);
+    }
+
+    /**
+     * Registering equipment for the procedure
+     *
+     * @param procedureId of procedure to register equipment
+     * @param equipmentId of equipment to register
+     */
+    @PatchMapping(value = "/{procedureId}/register-equipment/{equipmentId}")
+    public void registerEquipment(@PathVariable Long procedureId,
+                                  @PathVariable Long equipmentId) {
+        procedureService.registerEquipment(procedureId, equipmentId);
     }
 
     /**

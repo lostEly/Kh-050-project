@@ -1,10 +1,5 @@
 package com.softserve.kh50project.davita.controller;
 
-
-
-
-
-
 import com.softserve.kh50project.davita.model.Equipment;
 import com.softserve.kh50project.davita.service.EquipmentService;
 import lombok.AllArgsConstructor;
@@ -66,7 +61,7 @@ public class EquipmentController {
     @PutMapping(value = "/{id}")
     public ResponseEntity<Equipment> update(@RequestBody Equipment equipment, @PathVariable Long id) {
         Equipment equipmentU = equipmentService.update(equipment, id);
-        return new ResponseEntity<>(equipmentU, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(equipmentU, HttpStatus.OK);
     }
 
     /**

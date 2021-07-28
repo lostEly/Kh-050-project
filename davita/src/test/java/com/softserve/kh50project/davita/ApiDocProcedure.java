@@ -2,7 +2,6 @@ package com.softserve.kh50project.davita;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.kh50project.davita.model.Equipment;
-import com.softserve.kh50project.davita.model.Procedure;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Order;
@@ -36,16 +35,11 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.util.StringUtils.collectionToDelimitedString;
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest(classes = DavitaApplication.class)
 public class ApiDocProcedure {
-
-
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -100,23 +94,16 @@ public class ApiDocProcedure {
                                 fieldWithPath("cost").description("The cost of the input"),
                                 fieldWithPath("equipment_id").description("The cost of the input"),
                                 fieldWithPath("procedure_id").description("The cost of the input"),
-
                                 fieldWithPath("tags").description("An array of tag resource URIs"))));
     }
 
 
     @Test
     public void crudCreateExample() throws Exception {
-
-
-
         Map<String, Object> crud = new HashMap<>();
         crud.put("cost", 10.20);
         crud.put("duration", LocalTime.now());
         crud.put("name", "Blood");
-
-
-
 
         String tagLocation = this.mockMvc.perform(post("/procedures").contentType(MediaTypes.HAL_JSON)
                 .content(this.objectMapper.writeValueAsString(crud)))
@@ -184,7 +171,6 @@ public class ApiDocProcedure {
                                 fieldWithPath("name").description("The title of the input"),
                                 fieldWithPath("duration").description("The duration of the input"),
                                 fieldWithPath("cost").description("The cost of the input")
-
                                )));
     }
 }

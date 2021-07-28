@@ -165,13 +165,13 @@ public class ApiDocEquipment {
     @Order(3)
     public void crudPutExample() throws Exception {
         Map<String, Object> tag = new HashMap<>();
-        tag.put("equipment_id", 2L);
+        tag.put("equipment_id", 29L);
 
         tag.put("name", "Blood Pressure");
 
         String tagLocation = this.mockMvc.perform(put("/equipment/{id}", 2L).contentType(MediaTypes.HAL_JSON)
                 .content(this.objectMapper.writeValueAsString(tag)))
-                .andExpect(status().isAccepted())
+                .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
                 .getHeader("Location");
@@ -183,6 +183,6 @@ public class ApiDocEquipment {
 
         this.mockMvc.perform(put("/equipment/{id}", 2).contentType(MediaTypes.HAL_JSON)
                 .content(this.objectMapper.writeValueAsString(crud)))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isOk());
     }
 }

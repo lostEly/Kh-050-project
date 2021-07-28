@@ -3,27 +3,31 @@ package com.softserve.kh50project.davita;
 
 import com.softserve.kh50project.davita.model.Equipment;
 import com.softserve.kh50project.davita.repository.EquipmentRepository;
+import com.softserve.kh50project.davita.service.impl.EquipmentServiceImpl;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static io.restassured.RestAssured.get;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.Mockito.when;
 
 @DataJpaTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -69,6 +73,41 @@ public class EquipmentRepositoryTest {
         Equipment procedure = equipmentRepository.findById(9L).get();
         assertEquals(procedure, equipmentList.get(8));
     }
+
+
+    @MockBean
+    EquipmentServiceImpl equipmentService;
+
+
+    @Test
+    public void givenMovieId_whenMakingGetRequestToMovieEndpoint_thenReturnMovie() {
+
+        Equipment testEquipment = new Equipment();
+        testEquipment.setName("defibrillators");
+        when(equipmentService.readById(16L)).thenReturn(testEquipment);
+
+        get(ROOT_URL + "/equipment/" + testEquipment.getEquipmentId()).then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .body("id", equalTo(testEquipment.getEquipmentId()))
+                .body("name", equalTo(testEquipment.getName()));
+
+        Equipment result = get(ROOT_URL + "/equipment/" + testEquipment.getEquipmentId()).then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .as(Equipment.class);
+        assertThat(result).isEqualTo(testEquipment);
+
+        String responseString = get(ROOT_URL + "/equipment/" + testEquipment.getEquipmentId()).then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+        assertThat(responseString).isNotEmpty();
+    }
+
+
 
 
     @Test
@@ -153,7 +192,7 @@ public class EquipmentRepositoryTest {
     @Order(9)
     @DisplayName("testGetPostById using URL")
     public void testGetPostById() {
-        Equipment equipment = restTemplate.getForObject(ROOT_URL + "/equipment/1", Equipment.class);
+        Equipment equipment = restTemplate.getForObject(ROOT_URL + "/equipment/24", Equipment.class);
         assertNotNull(equipment);
     }
 
@@ -165,7 +204,7 @@ public class EquipmentRepositoryTest {
     @Order(10)
     @DisplayName("testUpdatePost using URL")
     public void testUpdatePost() {
-        int id = 1;
+        int id = 27;
         Equipment post = restTemplate.getForObject(ROOT_URL + "/equipment/" + id, Equipment.class);
         post.setName("This my updated post1 content");
         restTemplate.put(ROOT_URL + "/equipment/" + id, post);
@@ -173,21 +212,7 @@ public class EquipmentRepositoryTest {
         assertNotNull(updatedPost);
     }
 
-    @Test
-    @Disabled
-    @Order(11)
-    @DisplayName("testDeletePost using URL")
-    public void testDeletePost() {
-        Long id = 2L;
-        Equipment equipment = restTemplate.getForObject(ROOT_URL + "/equipment/" + id, Equipment.class);
-        assertNotNull(equipment);
-        restTemplate.delete(ROOT_URL + "/equipment/" + id);
-        try {
-            equipment = restTemplate.getForObject(ROOT_URL + "/equipment/" + id, Equipment.class);
-        } catch (final HttpClientErrorException e) {
-            assertEquals(e.getStatusCode(), HttpStatus.OK);
-        }
-    }
+
 
     private Equipment createEquipment() {
         Equipment equipment = new Equipment();
