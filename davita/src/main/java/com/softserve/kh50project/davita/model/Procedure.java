@@ -35,4 +35,5 @@ public class Procedure {
     @JoinColumn(name = "equipment_equipment_id")
     @ToString.Exclude
     private Equipment equipment;
+    
 }
