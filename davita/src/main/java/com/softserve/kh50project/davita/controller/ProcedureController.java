@@ -1,8 +1,10 @@
 package com.softserve.kh50project.davita.controller;
 
+import com.softserve.kh50project.davita.dto.ProcedureDto;
 import com.softserve.kh50project.davita.model.Procedure;
 import com.softserve.kh50project.davita.service.ProcedureService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,8 @@ public class ProcedureController {
 
     @Qualifier(value = "ProcedureServiceImpl")
     private final ProcedureService procedureService;
+
+    private final ModelMapper modelMapper;
 
     /**
      * Getting all procedures by parameters
@@ -42,33 +46,38 @@ public class ProcedureController {
      * @return the procedure by id
      */
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Procedure> readById(@PathVariable Long id) {
+    public ResponseEntity<ProcedureDto> readById(@PathVariable Long id) {
         Procedure procedure = procedureService.readById(id);
-        return new ResponseEntity<>(procedure, HttpStatus.OK);
+        ProcedureDto procedureDto = convertProcedureToDto(procedure);
+        return new ResponseEntity<>(procedureDto, HttpStatus.OK);
     }
 
     /**
      * Creating new procedure
      *
-     * @param procedure which should be created
+     * @param procedureDto which should be created
      * @return the created procedure
      */
     @PostMapping
-    public ResponseEntity<Procedure> create(@RequestBody Procedure procedure) {
-        Procedure createdProcedure = procedureService.create(procedure);
+    public ResponseEntity<ProcedureDto> create(@RequestBody ProcedureDto procedureDto) {
+        Procedure receivedProcedure = convertDtoToProcedure(procedureDto);
+        procedureService.create(receivedProcedure);
+        ProcedureDto createdProcedure = convertProcedureToDto(receivedProcedure);
         return new ResponseEntity<>(createdProcedure, HttpStatus.CREATED);
     }
 
     /**
      * Updating the procedure
      *
-     * @param procedure to be updated
-     * @param id        of the procedure
+     * @param procedureDto to be updated
+     * @param id           of the procedure
      * @return updated procedure
      */
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Procedure> update(@RequestBody Procedure procedure, @PathVariable Long id) {
-        Procedure updatedProcedure = procedureService.update(procedure, id);
+    public ResponseEntity<ProcedureDto> update(@RequestBody ProcedureDto procedureDto, @PathVariable Long id) {
+        Procedure receivedProcedure = convertDtoToProcedure(procedureDto);
+        procedureService.update(receivedProcedure, id);
+        ProcedureDto updatedProcedure = convertProcedureToDto(receivedProcedure);
         return new ResponseEntity<>(updatedProcedure, HttpStatus.OK);
     }
 
@@ -80,9 +89,10 @@ public class ProcedureController {
      * @return updated procedure
      */
     @PatchMapping(value = "/{id}")
-    public ResponseEntity<Procedure> patch(@RequestBody Map<String, Object> fields, @PathVariable Long id) {
+    public ResponseEntity<ProcedureDto> patch(@RequestBody Map<String, Object> fields, @PathVariable Long id) {
         Procedure patchedProcedure = procedureService.patch(fields, id);
-        return new ResponseEntity<>(patchedProcedure, HttpStatus.OK);
+        ProcedureDto patchedProcedureDto = convertProcedureToDto(patchedProcedure);
+        return new ResponseEntity<>(patchedProcedureDto, HttpStatus.OK);
     }
 
     /**
@@ -104,8 +114,32 @@ public class ProcedureController {
      * @return status code 200 OK
      */
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Procedure> delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         procedureService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * Converting procedure to DTO
+     *
+     * @param procedure to be converted
+     * @return ProcedureDTO object
+     */
+    private ProcedureDto convertProcedureToDto(Procedure procedure) {
+        ProcedureDto procedureDto = modelMapper.map(procedure, ProcedureDto.class);
+        procedureDto.convertLocalTimeToString(procedure.getDuration());
+        return procedureDto;
+    }
+
+    /**
+     * Converting ProcedureDto to Procedure
+     *
+     * @param procedureDto to be converted
+     * @return Procedure object
+     */
+    private Procedure convertDtoToProcedure(ProcedureDto procedureDto) {
+        Procedure procedure = modelMapper.map(procedureDto, Procedure.class);
+        procedure.setDuration(procedureDto.convertStringToLocalTime());
+        return procedure;
     }
 }
