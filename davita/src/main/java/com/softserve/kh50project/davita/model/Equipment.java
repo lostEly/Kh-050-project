@@ -1,12 +1,11 @@
 package com.softserve.kh50project.davita.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -23,12 +22,11 @@ public class Equipment {
 
     @OneToMany(
             mappedBy = "equipment",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
+            cascade = CascadeType.ALL
     )
-    @JsonIgnore
+    @JsonManagedReference
     @ToString.Exclude
-    List<Procedure> procedures = new ArrayList<>();
+    List<Procedure> procedures;
 
     public void addProcedure(Procedure procedure) {
         procedures.add(procedure);

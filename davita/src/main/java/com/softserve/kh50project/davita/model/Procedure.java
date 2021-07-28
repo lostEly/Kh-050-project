@@ -1,6 +1,6 @@
 package com.softserve.kh50project.davita.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,8 +30,9 @@ public class Procedure {
     @Column(nullable = false)
     private Double cost;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
+    @JoinColumn(name = "equipment_equipment_id")
     @ToString.Exclude
     private Equipment equipment;
 }
