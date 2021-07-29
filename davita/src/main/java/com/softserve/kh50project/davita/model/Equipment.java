@@ -38,4 +38,5 @@ public class Equipment {
         procedures.remove(procedure);
         procedure.setEquipment(null);
     }
+    
 }
