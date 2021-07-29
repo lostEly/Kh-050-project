@@ -39,3 +39,4 @@ public class Equipment {
         procedure.setEquipment(null);
     }
 }
+
