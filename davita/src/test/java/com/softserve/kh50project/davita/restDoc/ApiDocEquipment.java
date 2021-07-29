@@ -1,4 +1,4 @@
-package com.softserve.kh50project.davita;
+package com.softserve.kh50project.davita.restDoc;
 
 
 import static java.util.Collections.singletonList;
@@ -42,9 +42,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-/*
-import com.baeldung.restdocs.CrudInput;
-import com.baeldung.restdocs.SpringRestDocsApplication;*/
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.softserve.kh50project.davita.model.Equipment;
@@ -112,7 +110,7 @@ public class ApiDocEquipment {
         crud.put("equipment_id", 1L);
         crud.put("name", "Sample Model");
 
-        String tagLocation = this.mockMvc.perform(post("/equipment/add-equipment").contentType(MediaTypes.HAL_JSON)
+        String tagLocation = this.mockMvc.perform(post("/equipment").contentType(MediaTypes.HAL_JSON)
                 .content(this.objectMapper.writeValueAsString(crud)))
                 .andExpect(status().isCreated())
                 .andReturn()
@@ -121,7 +119,7 @@ public class ApiDocEquipment {
 
         crud.put("tags", singletonList(tagLocation));
 
-        this.mockMvc.perform(post("/equipment/add-equipment").contentType(MediaTypes.HAL_JSON)
+        this.mockMvc.perform(post("/equipment").contentType(MediaTypes.HAL_JSON)
                 .content(this.objectMapper.writeValueAsString(crud)))
                 .andExpect(status().isCreated())
                 .andDo(document("equipment-create-example", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()), requestFields(fieldWithPath("equipment_id").description("The id of the input"), fieldWithPath("name").description("The title of the input")

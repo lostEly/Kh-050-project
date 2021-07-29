@@ -1,6 +1,7 @@
-package com.softserve.kh50project.davita;
+package com.softserve.kh50project.davita.restDoc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.softserve.kh50project.davita.DavitaApplication;
 import com.softserve.kh50project.davita.model.Equipment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;

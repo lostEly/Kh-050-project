@@ -1,8 +1,7 @@
-package com.softserve.kh50project.davita;
+package com.softserve.kh50project.davita.repository;
 
 
 import com.softserve.kh50project.davita.model.Equipment;
-import com.softserve.kh50project.davita.repository.EquipmentRepository;
 import com.softserve.kh50project.davita.service.impl.EquipmentServiceImpl;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,30 +10,25 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.client.RestTemplate;
 
+import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static io.restassured.RestAssured.get;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
+
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.mockito.Mockito.when;
 
 @DataJpaTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestPropertySource("classpath:application-test.properties")
-@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
 public class EquipmentRepositoryTest {
-
 
     @Autowired
     private EquipmentRepository equipmentRepository;
@@ -79,33 +73,7 @@ public class EquipmentRepositoryTest {
     EquipmentServiceImpl equipmentService;
 
 
-    @Test
-    public void givenMovieId_whenMakingGetRequestToMovieEndpoint_thenReturnMovie() {
 
-        Equipment testEquipment = new Equipment();
-        testEquipment.setName("defibrillators");
-        when(equipmentService.readById(16L)).thenReturn(testEquipment);
-
-        get(ROOT_URL + "/equipment/" + testEquipment.getEquipmentId()).then()
-                .assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .body("id", equalTo(testEquipment.getEquipmentId()))
-                .body("name", equalTo(testEquipment.getName()));
-
-        Equipment result = get(ROOT_URL + "/equipment/" + testEquipment.getEquipmentId()).then()
-                .assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .extract()
-                .as(Equipment.class);
-        assertThat(result).isEqualTo(testEquipment);
-
-        String responseString = get(ROOT_URL + "/equipment/" + testEquipment.getEquipmentId()).then()
-                .assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .extract()
-                .asString();
-        assertThat(responseString).isNotEmpty();
-    }
 
 
 
@@ -183,7 +151,7 @@ public class EquipmentRepositoryTest {
         Equipment equipment = new Equipment();
         equipment.setName("Defibrillators");
         ResponseEntity<Equipment> postResponse =
-                restTemplate.postForEntity(ROOT_URL + "/equipment/add-equipment", equipment, Equipment.class);
+                restTemplate.postForEntity(ROOT_URL + "/equipment", equipment, Equipment.class);
         assertNotNull(postResponse);
         assertNotNull(postResponse.getBody());
     }
