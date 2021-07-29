@@ -20,5 +20,4 @@ public interface ProcedureService {
     void delete(Long id);
 
     void registerEquipment(Long procedureId, Long equipmentId);
-
 }
