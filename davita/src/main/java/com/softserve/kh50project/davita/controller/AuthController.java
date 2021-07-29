@@ -27,7 +27,7 @@ public class AuthController {
         this.jwtProvider = jwtProvider;
     }
 
-    @PostMapping("/register")
+    @PostMapping("/register") //signup
     public String registerUser(@RequestBody @Valid RegistrationRequest registrationRequest) {
         User u = new User();
         u.setPassword(registrationRequest.getPassword());
@@ -36,7 +36,7 @@ public class AuthController {
         return "OK";
     }
 
-    @PostMapping("/auth")
+    @PostMapping("/auth")      //signin
     public AuthResponse auth(@RequestBody AuthRequest request) {
         User user = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
         String token = jwtProvider.generateToken(user.getLogin());
