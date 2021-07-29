@@ -11,9 +11,9 @@ public interface ProcedureService {
 
     List<ProcedureDto> read(String name, Double cost, String duration);
 
-    ProcedureDto create(ProcedureDto procedureDto);
+    ProcedureDto create(ProcedureDto procedure);
 
-    ProcedureDto update(ProcedureDto procedureDto, Long id);
+    ProcedureDto update(ProcedureDto procedure, Long id);
 
     ProcedureDto patch(Map<String, Object> fields, Long id);
 
