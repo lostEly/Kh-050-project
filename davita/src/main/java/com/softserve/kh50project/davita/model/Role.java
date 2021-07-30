@@ -13,10 +13,10 @@ import java.util.Set;
 @Entity(name = "role")
 public class Role {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long roleId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @Size(max = 45)
     String name;
 

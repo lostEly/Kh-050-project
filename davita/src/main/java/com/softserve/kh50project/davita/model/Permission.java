@@ -11,7 +11,7 @@ import java.util.Set;
 @Entity()
 public class Permission {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long permissionId;
 
     @Column(nullable = false)
