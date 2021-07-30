@@ -2,6 +2,7 @@ package com.softserve.kh50project.davita.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -15,13 +16,14 @@ public class Doctor extends User {
 
     @Column(nullable = false)
     @Size(max = 45)
-    String specialization;
+    private String specialization;
 
     @Column(nullable = false)
     @Size(max = 45)
-    String certificateNumber;
+    private String certificateNumber;
 
+    @ToString.Exclude
     @Column
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
-    List<Order> orders;
+    private List<Order> orders;
 }
