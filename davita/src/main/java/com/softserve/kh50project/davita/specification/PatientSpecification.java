@@ -31,26 +31,26 @@ public class PatientSpecification implements Specification<Patient>{
 
     @Override
     public Predicate toPredicate(Root<Patient> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-        return new DoctorPredicateBuilder(criteriaBuilder, root)
+        return new PatientPredicateBuilder(criteriaBuilder, root)
                 .name(name)
                 .lastName(lastName)
                 .dateOfBirth(dateOfBirth)
                 .build();
     }
 
-    private static class DoctorPredicateBuilder {
+    private static class PatientPredicateBuilder {
 
         private final List<Predicate> predicates;
         private final CriteriaBuilder criteriaBuilder;
         private final Root<Patient> root;
 
-        DoctorPredicateBuilder(CriteriaBuilder criteriaBuilder, Root<Patient> root) {
+        PatientPredicateBuilder(CriteriaBuilder criteriaBuilder, Root<Patient> root) {
             this.predicates = new ArrayList<>();
             this.criteriaBuilder = criteriaBuilder;
             this.root = root;
         }
 
-        DoctorPredicateBuilder name(String name) {
+        PatientPredicateBuilder name(String name) {
             if (nonNull(name)) {
                 predicates.add(criteriaBuilder.equal(root.get("name"), name));
             }
@@ -58,7 +58,7 @@ public class PatientSpecification implements Specification<Patient>{
             return this;
         }
 
-        DoctorPredicateBuilder lastName(String lastName) {
+        PatientPredicateBuilder lastName(String lastName) {
             if (nonNull(lastName)) {
                 predicates.add(criteriaBuilder.equal(root.get("lastName"), lastName));
             }
@@ -66,7 +66,7 @@ public class PatientSpecification implements Specification<Patient>{
             return this;
         }
 
-        DoctorPredicateBuilder dateOfBirth(LocalDate dateOfBirth) {
+        PatientPredicateBuilder dateOfBirth(LocalDate dateOfBirth) {
             if (nonNull(dateOfBirth)) {
                 predicates.add(criteriaBuilder.equal(root.get("dateOfBirth"), dateOfBirth));
             }
