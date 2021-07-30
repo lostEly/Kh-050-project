@@ -26,6 +26,8 @@ import static org.junit.jupiter.api.Assertions.*;
         classes = DavitaApplication.class)
 class DoctorControllerTest {
 
+    public static final String LOCALHOST = "http://localhost:";
+    public static final String CONTEXT_PATH = "/ss-ita-davita-api";
     @LocalServerPort
     private int port;
 
@@ -35,7 +37,7 @@ class DoctorControllerTest {
     @Test
     void getDoctorByIdWith404() {
         ResponseEntity<DoctorDto> response = restTemplate.exchange(
-                "http://localhost:" + port + "/ss-ita-davita-api" + "/doctors/1",
+                LOCALHOST + port + CONTEXT_PATH + "/doctors/1",
                 HttpMethod.GET,
                 null,
                 DoctorDto.class
@@ -45,12 +47,11 @@ class DoctorControllerTest {
     }
 
     @Order(2)
-    @Sql(scripts = "classpath:db/create-user.sql")
+    @Sql(scripts = "classpath:testdata/create-doctors.sql")
     @Test
     void getDoctorById() {
-
         ResponseEntity<DoctorDto> response = restTemplate.exchange(
-                "http://localhost:" + port + "/ss-ita-davita-api" + "/doctors/1",
+                LOCALHOST + port + CONTEXT_PATH + "/doctors/1",
                 HttpMethod.GET,
                 null,
                 DoctorDto.class
@@ -63,10 +64,9 @@ class DoctorControllerTest {
     @Order(3)
     @Test
     void getDoctors() {
-
         ResponseEntity<List<DoctorDto>> response =
                 restTemplate.exchange(
-                        "http://localhost:" + port + "/ss-ita-davita-api" + "/doctors",
+                        LOCALHOST + port + CONTEXT_PATH + "/doctors",
                         HttpMethod.GET,
                         null,
                         new ParameterizedTypeReference<>() {
@@ -80,10 +80,9 @@ class DoctorControllerTest {
     @Order(3)
     @Test
     void getDoctorsBySpecialization() {
-
         ResponseEntity<List<DoctorDto>> response =
                 restTemplate.exchange(
-                        "http://localhost:" + port + "/ss-ita-davita-api" + "/doctors?specialization=doctor1",
+                        LOCALHOST + port + CONTEXT_PATH + "/doctors?specialization=doctor1",
                         HttpMethod.GET,
                         null,
                         new ParameterizedTypeReference<>() {
@@ -98,7 +97,7 @@ class DoctorControllerTest {
     @Test
     void createDoctor() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(List.of(new MediaType("application", "json")));
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
         DoctorDto doctorDto = new DoctorDto();
         doctorDto.setName("test4");
@@ -115,7 +114,7 @@ class DoctorControllerTest {
 
         ResponseEntity<DoctorDto> response =
                 restTemplate.exchange(
-                        "http://localhost:" + port + "/ss-ita-davita-api" + "/doctors",
+                        LOCALHOST + port + CONTEXT_PATH + "/doctors",
                         HttpMethod.POST,
                         entity,
                         DoctorDto.class
@@ -129,7 +128,7 @@ class DoctorControllerTest {
     @Test
     void updateDoctor() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(List.of(new MediaType("application", "json")));
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
         DoctorDto doctorDto = new DoctorDto();
         doctorDto.setUserId(1L);
@@ -144,7 +143,7 @@ class DoctorControllerTest {
 
         ResponseEntity<DoctorDto> response =
                 restTemplate.exchange(
-                        "http://localhost:" + port + "/ss-ita-davita-api" + "/doctors/1",
+                        LOCALHOST + port + CONTEXT_PATH + "/doctors/1",
                         HttpMethod.PUT,
                         entity,
                         DoctorDto.class
@@ -159,22 +158,13 @@ class DoctorControllerTest {
     @Test
     void updateNotExistingDoctor() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(List.of(new MediaType("application", "json")));
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
-        DoctorDto doctorDto = new DoctorDto();
-        doctorDto.setUserId(1L);
-        doctorDto.setName("test-upd");
-        doctorDto.setLastName("test");
-        doctorDto.setSpecialization("doctor");
-        doctorDto.setCertificateNumber("124345");
-        doctorDto.setLogin("test");
-        doctorDto.setPassword("pwd");
-
-        HttpEntity<DoctorDto> entity = new HttpEntity<>(doctorDto, headers);
+        HttpEntity<DoctorDto> entity = new HttpEntity<>(new DoctorDto(), headers);
 
         ResponseEntity<DoctorDto> response =
                 restTemplate.exchange(
-                        "http://localhost:" + port + "/ss-ita-davita-api" + "/doctors/99",
+                        LOCALHOST + port + CONTEXT_PATH + "/doctors/99",
                         HttpMethod.PUT,
                         entity,
                         DoctorDto.class
@@ -187,7 +177,7 @@ class DoctorControllerTest {
     @Test
     void patchDoctor() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(List.of(new MediaType("application", "json")));
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
         Map<String, Object> fields = Map.of("lastName", "lastename-upd");
 
@@ -195,7 +185,7 @@ class DoctorControllerTest {
 
         ResponseEntity<DoctorDto> response =
                 restTemplate.exchange(
-                        "http://localhost:" + port + "/ss-ita-davita-api" + "/doctors/2",
+                        LOCALHOST + port + CONTEXT_PATH + "/doctors/2",
                         HttpMethod.PATCH,
                         entity,
                         DoctorDto.class
@@ -209,15 +199,13 @@ class DoctorControllerTest {
     @Test
     void patchNotExistingDoctor() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(List.of(new MediaType("application", "json")));
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
-        Map<String, Object> fields = Map.of("lastName", "lastename-upd");
-
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(fields, headers);
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(Map.of(), headers);
 
         ResponseEntity<DoctorDto> response =
                 restTemplate.exchange(
-                        "http://localhost:" + port + "/ss-ita-davita-api" + "/doctors/9",
+                        LOCALHOST + port + CONTEXT_PATH + "/doctors/9",
                         HttpMethod.PATCH,
                         entity,
                         DoctorDto.class
@@ -231,7 +219,7 @@ class DoctorControllerTest {
     void deleteDoctor() {
         ResponseEntity<?> response =
                 restTemplate.exchange(
-                        "http://localhost:" + port + "/ss-ita-davita-api" + "/doctors/1",
+                        LOCALHOST + port + CONTEXT_PATH + "/doctors/1",
                         HttpMethod.DELETE,
                         null,
                         new ParameterizedTypeReference<>() {
@@ -246,14 +234,13 @@ class DoctorControllerTest {
     void deleteNotExistingDoctor() {
         ResponseEntity<?> response =
                 restTemplate.exchange(
-                        "http://localhost:" + port + "/ss-ita-davita-api" + "/doctors/99",
+                        LOCALHOST + port + CONTEXT_PATH + "/doctors/99",
                         HttpMethod.DELETE,
                         null,
                         new ParameterizedTypeReference<>() {
                         }
                 );
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
-
 }

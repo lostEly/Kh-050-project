@@ -69,6 +69,12 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public void delete(Long id) {
+        try {
+            readById(id);
+        } catch (ResourceNotFoundException e) {
+            return;
+        }
+
         doctorRepository.deleteById(id);
     }
 }

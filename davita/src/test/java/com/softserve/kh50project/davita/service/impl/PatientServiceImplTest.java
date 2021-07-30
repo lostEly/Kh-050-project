@@ -220,8 +220,23 @@ class PatientServiceImplTest {
 
     @Test
     void delete() {
+        doReturn(new PatientDto()).when(patientService).readById(anyLong());
+
         patientService.delete(USER_ID);
+
+        verify(patientService).readById(USER_ID);
         verify(patientRepository).deleteById(USER_ID);
+    }
+
+
+    @Test
+    void deleteNonExisting() {
+        doReturn(Optional.empty()).when(patientRepository).findById(USER_ID);
+
+        patientService.delete(USER_ID);
+
+        verify(patientRepository).findById(USER_ID);
+        verify(patientRepository, never()).deleteById(USER_ID);
     }
 
 }

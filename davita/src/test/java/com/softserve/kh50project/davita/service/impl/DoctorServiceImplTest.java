@@ -216,7 +216,21 @@ class DoctorServiceImplTest {
 
     @Test
     void delete() {
+        doReturn(new DoctorDto()).when(doctorService).readById(anyLong());
+
         doctorService.delete(USER_ID);
+
+        verify(doctorService).readById(USER_ID);
         verify(doctorRepository).deleteById(USER_ID);
+    }
+
+    @Test
+    void deleteNonExisting() {
+        doReturn(Optional.empty()).when(doctorRepository).findById(USER_ID);
+
+        doctorService.delete(USER_ID);
+
+        verify(doctorRepository).findById(USER_ID);
+        verify(doctorRepository, never()).deleteById(USER_ID);
     }
 }
