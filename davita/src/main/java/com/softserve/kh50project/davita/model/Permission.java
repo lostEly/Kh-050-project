@@ -1,13 +1,16 @@
 package com.softserve.kh50project.davita.model;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
 @Entity(name = "permission")
 public class Permission {
     @Id
@@ -19,5 +22,6 @@ public class Permission {
     String name;
 
     @ManyToMany(mappedBy = "permissions")
+    @ToString.Exclude
     private Set<Role> rolePermission = new HashSet<>();
 }

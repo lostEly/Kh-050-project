@@ -1,6 +1,6 @@
 package com.softserve.kh50project.davita.model;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -9,7 +9,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
 @Entity(name = "role")
 public class Role {
     @Id
@@ -32,6 +35,7 @@ public class Role {
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
+    @ToString.Exclude
     private Set<Permission> permissions = new HashSet<>();
 
     public void addPermission(Permission permission) {
