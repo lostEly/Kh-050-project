@@ -1,6 +1,5 @@
 package com.softserve.kh50project.davita.controller;
 
-
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.stereotype.Controller;
