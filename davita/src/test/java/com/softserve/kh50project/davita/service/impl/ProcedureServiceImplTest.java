@@ -63,7 +63,8 @@ class ProcedureServiceImplTest {
     void readById() {
         Long id = 1L;
         ProcedureDto foundProcedure = procedureService.readById(id);
-        Mockito.verify(procedureRepository, Mockito.times(1)).findById(anyLong());
+        Mockito.verify(procedureRepository)
+                .findById(anyLong());
         assertNotNull(foundProcedure);
         assertEquals(id, foundProcedure.getProcedureId());
     }
@@ -86,8 +87,10 @@ class ProcedureServiceImplTest {
         Mockito.when(procedureRepository.findAll(specification))
                 .thenReturn(Collections.singletonList(procedure));
         List<ProcedureDto> procedureDtoList = procedureService.read(null, null, null);
-        Mockito.verify(procedureRepository, Mockito.times(1)).getProcedureQuery(null, null, null);
-        Mockito.verify(procedureRepository, Mockito.times(1)).findAll(specification);
+        Mockito.verify(procedureRepository)
+                .getProcedureQuery(null, null, null);
+        Mockito.verify(procedureRepository)
+                .findAll(specification);
         assertNotNull(procedureDtoList);
         assertEquals(1, procedureDtoList.size());
     }
@@ -95,7 +98,8 @@ class ProcedureServiceImplTest {
     @Test
     void create() {
         ProcedureDto procedureDto1 = procedureService.create(procedureDto);
-        Mockito.verify(procedureRepository, Mockito.times(1)).save(procedure);
+        Mockito.verify(procedureRepository)
+                .save(procedure);
         assertNotNull(procedureDto1);
         assertEquals("procedure", procedureDto1.getName());
     }
@@ -106,7 +110,7 @@ class ProcedureServiceImplTest {
         ProcedureDto procedureDto1 = procedureDto;
         procedureDto1.setName(updatedName);
         ProcedureDto updatedProcedure = procedureService.update(procedureDto1, procedureDto1.getProcedureId());
-        Mockito.verify(procedureRepository, Mockito.times(1))
+        Mockito.verify(procedureRepository)
                 .save(procedureService.convertDtoToProcedure(procedureDto1));
         assertNotNull(updatedProcedure);
         assertEquals(updatedName, updatedProcedure.getName());
@@ -119,8 +123,10 @@ class ProcedureServiceImplTest {
         fields.put("name", updatedName);
         ProcedureDto procedureDto1 = procedureDto;
         ProcedureDto patchedProcedureDto = procedureService.patch(fields, procedureDto1.getProcedureId());
-        Mockito.verify(procedureRepository, Mockito.times(1)).findById(anyLong());
-        Mockito.verify(procedureRepository, Mockito.times(1)).save(procedure);
+        Mockito.verify(procedureRepository)
+                .findById(anyLong());
+        Mockito.verify(procedureRepository)
+                .save(procedure);
         assertNotNull(patchedProcedureDto);
         assertEquals(updatedName, patchedProcedureDto.getName());
     }
@@ -128,7 +134,8 @@ class ProcedureServiceImplTest {
     @Test
     void delete() {
         procedureService.delete(procedure.getProcedureId());
-        Mockito.verify(procedureRepository, Mockito.times(1)).deleteById(anyLong());
+        Mockito.verify(procedureRepository)
+                .deleteById(anyLong());
     }
 
     @Test
