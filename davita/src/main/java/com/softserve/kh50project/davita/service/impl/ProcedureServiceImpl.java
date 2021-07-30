@@ -85,7 +85,7 @@ public class ProcedureServiceImpl implements ProcedureService {
      * @param procedure to be converted
      * @return ProcedureDTO object
      */
-    ProcedureDto convertProcedureToDto(Procedure procedure) {
+    public ProcedureDto convertProcedureToDto(Procedure procedure) {
         ProcedureDto procedureDto = modelMapper.map(procedure, ProcedureDto.class);
         procedureDto.convertLocalTimeToString(procedure.getDuration());
         return procedureDto;
@@ -97,7 +97,7 @@ public class ProcedureServiceImpl implements ProcedureService {
      * @param procedureDto to be converted
      * @return Procedure object
      */
-    Procedure convertDtoToProcedure(ProcedureDto procedureDto) {
+    public Procedure convertDtoToProcedure(ProcedureDto procedureDto) {
         Procedure procedure = modelMapper.map(procedureDto, Procedure.class);
         procedure.setDuration(procedureDto.convertStringToLocalTime());
         return procedure;
