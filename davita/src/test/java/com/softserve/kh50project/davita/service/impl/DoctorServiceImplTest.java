@@ -39,7 +39,7 @@ class DoctorServiceImplTest {
     private DoctorServiceImpl doctorService;
 
     @Test
-    public void readById() {
+    void readById() {
         Doctor doctor = new Doctor();
         doctor.setUserId(USER_ID);
 
@@ -59,7 +59,7 @@ class DoctorServiceImplTest {
     }
 
     @Test
-    public void readByIdWithException() {
+    void readByIdWithException() {
         doReturn(Optional.empty()).when(doctorRepository).findById(anyLong());
 
         assertThrows(ResourceNotFoundException.class, () -> doctorService.readById(USER_ID));
@@ -69,7 +69,7 @@ class DoctorServiceImplTest {
     }
 
     @Test
-    public void readAllWithSpecialization() {
+    void readAllWithSpecialization() {
         Doctor doctor1 = new Doctor();
         doctor1.setSpecialization(SPECIALIZATION);
 
@@ -99,7 +99,7 @@ class DoctorServiceImplTest {
     }
 
     @Test
-    public void readAllWithNullSpecialization() {
+    void readAllWithNullSpecialization() {
         Doctor doctor1 = new Doctor();
         doctor1.setSpecialization(SPECIALIZATION);
 
@@ -129,7 +129,7 @@ class DoctorServiceImplTest {
     }
 
     @Test
-    public void create() {
+    void create() {
         DoctorDto doctorDto = new DoctorDto();
         doctorDto.setSpecialization(SPECIALIZATION);
 
@@ -155,11 +155,14 @@ class DoctorServiceImplTest {
     }
 
     @Test
-    public void update() {
+    void update() {
         DoctorDto doctorDto = new DoctorDto();
+        doctorDto.setUserId(USER_ID);
 
         Doctor doctor = new Doctor();
         doctor.setUserId(USER_ID);
+
+        doReturn(doctorDto).when(doctorService).readById(anyLong());
 
         doReturn(doctor).when(doctorMapper).mapFrom(any(DoctorDto.class));
 
@@ -172,6 +175,7 @@ class DoctorServiceImplTest {
 
         DoctorDto actual = doctorService.update(doctorDto, USER_ID);
 
+        verify(doctorService).readById(USER_ID);
         verify(doctorMapper).mapFrom(doctorDto);
         verify(doctorRepository).save(doctor);
         verify(doctorMapper).mapTo(doctor);
@@ -180,7 +184,7 @@ class DoctorServiceImplTest {
     }
 
     @Test
-    public void patch() {
+    void patch() {
         DoctorDto doctorDto = new DoctorDto();
         doctorDto.setUserId(USER_ID);
 
@@ -211,7 +215,7 @@ class DoctorServiceImplTest {
     }
 
     @Test
-    public void delete() {
+    void delete() {
         doctorService.delete(USER_ID);
         verify(doctorRepository).deleteById(USER_ID);
     }

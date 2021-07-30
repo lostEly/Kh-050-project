@@ -50,7 +50,8 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public PatientDto update(PatientDto patientDto, Long id) {
-        patientDto.setUserId(id);
+        PatientDto existingPatient = readById(id);
+        patientDto.setUserId(existingPatient.getUserId());
         Patient patient = patientMapper.mapFrom(patientDto);
         return patientMapper.mapTo(patientRepository.save(patient));
     }

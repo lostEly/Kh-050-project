@@ -26,10 +26,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class PatientServiceImplTest {
     private static final long USER_ID = 5L;
-    public static final String JOHN = "John";
-    public static final String LAST_NAME = "Watson";
-    public static final LocalDate BIRTHDAY = LocalDate.of(1963, 10, 23);
-    public static final String INSURANCE_NUMBER = "1234567";
+    static final String JOHN = "John";
+    static final String LAST_NAME = "Watson";
+    static final LocalDate BIRTHDAY = LocalDate.of(1963, 10, 23);
+    static final String INSURANCE_NUMBER = "1234567";
 
     @Mock
     private PatientRepository patientRepository;
@@ -42,7 +42,7 @@ class PatientServiceImplTest {
     private PatientServiceImpl patientService;
 
     @Test
-    public void readById() {
+    void readById() {
         Patient patient = new Patient();
         patient.setUserId(USER_ID);
 
@@ -62,7 +62,7 @@ class PatientServiceImplTest {
     }
 
     @Test
-    public void readByIdWithException() {
+    void readByIdWithException() {
         doReturn(Optional.empty()).when(patientRepository).findById(anyLong());
 
         assertThrows(ResourceNotFoundException.class, () -> patientService.readById(USER_ID));
@@ -72,7 +72,7 @@ class PatientServiceImplTest {
     }
 
     @Test
-    public void readAllWithParameters() {
+    void readAllWithParameters() {
         Patient patient = new Patient();
         patient.setName(JOHN);
         patient.setLastName(LAST_NAME);
@@ -102,7 +102,7 @@ class PatientServiceImplTest {
     }
 
     @Test
-    public void readAllWithNullParameters() {
+    void readAllWithNullParameters() {
         Patient patient = new Patient();
         patient.setName(JOHN);
         patient.setLastName(LAST_NAME);
@@ -133,7 +133,7 @@ class PatientServiceImplTest {
     }
 
     @Test
-    public void create() {
+    void create() {
         PatientDto patientDto = new PatientDto();
         patientDto.setInsuranceNumber(INSURANCE_NUMBER);
 
@@ -159,8 +159,11 @@ class PatientServiceImplTest {
     }
 
     @Test
-    public void update() {
+    void update() {
         PatientDto patientDto = new PatientDto();
+        patientDto.setUserId(USER_ID);
+
+        doReturn(patientDto).when(patientService).readById(anyLong());
 
         Patient patient = new Patient();
         patient.setUserId(USER_ID);
@@ -176,6 +179,7 @@ class PatientServiceImplTest {
 
         PatientDto actual = patientService.update(patientDto, USER_ID);
 
+        verify(patientService).readById(USER_ID);
         verify(patientMapper).mapFrom(patientDto);
         verify(patientRepository).save(patient);
         verify(patientMapper).mapTo(patient);
@@ -184,7 +188,7 @@ class PatientServiceImplTest {
     }
 
     @Test
-    public void patch() {
+    void patch() {
         PatientDto patientDto = new PatientDto();
         patientDto.setUserId(USER_ID);
 
@@ -215,7 +219,7 @@ class PatientServiceImplTest {
     }
 
     @Test
-    public void delete() {
+    void delete() {
         patientService.delete(USER_ID);
         verify(patientRepository).deleteById(USER_ID);
     }
