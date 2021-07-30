@@ -1,19 +1,25 @@
 package com.softserve.kh50project.davita.controller;
 
-import com.softserve.kh50project.davita.model.Doctor;
 import com.softserve.kh50project.davita.model.Order;
+import com.softserve.kh50project.davita.service.OrderService;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-@RestController
+@Controller
 @RequestMapping("/orders")
+@AllArgsConstructor
 public class OrderController {
-//rjjlasdkfjlasdkjfalsdfjaslkfdj
+
+    @Qualifier(value = "OrderServiceImpl")
+    private final OrderService orderService;
 
     /**
      * Getting order by id
@@ -23,39 +29,41 @@ public class OrderController {
      */
     @GetMapping(value = "/{id}")
     public ResponseEntity<Order> readById(@PathVariable Long id) {
-        Order order = new Order();
-        order.setOrderId(id);
+        System.out.println(id);
+        Order order = orderService.readById(id);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
-//    /**
-//     * Getting all orders or orders with some param
-//     *
-//     * @param specialization optional, doctor specialization
-//     * @return the list of doctors
-//     */
-//    @GetMapping
-//    public ResponseEntity<List<Doctor>> read(@RequestParam(value = "specialization", required = false) String specialization) {
-//        Doctor doctor = new Doctor();
-//        Doctor doctor1 = new Doctor();
-//        Doctor doctor2 = new Doctor();
-//
-//        if (Objects.isNull(specialization)) {
-//            return new ResponseEntity<>(List.of(doctor, doctor1, doctor2), HttpStatus.OK);
-//        }
-//        return new ResponseEntity<>(List.of(doctor, doctor2), HttpStatus.OK);
-//
-//    }
+    /**
+     * Getting orders by param
+     *
+     * @param start       optional, procedure name
+     * @param finish      optional, procedure cost
+     * @param procedureId optional, procedure duration
+     * @param patientId   optional, procedure duration
+     * @param doctorId    optional, procedure duration
+     * @return the list of doctors
+     */
+    @GetMapping
+    public ResponseEntity<List<Order>> read(@RequestParam(value = "start", required = false) String start,
+                                            @RequestParam(value = "finish", required = false) String finish,
+                                            @RequestParam(value = "procedure_id", required = false) int procedureId,
+                                            @RequestParam(value = "patient_id", required = false) int patientId,
+                                            @RequestParam(value = "doctor_id", required = false) int doctorId) {
+        List<Order> orders = orderService.read(start, finish, procedureId, patientId, doctorId);
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
 
     /**
-     * Creating an order
+     * Creating a new order
      *
      * @param order which should be create
      * @return the created order
      */
     @PostMapping
     public ResponseEntity<Order> create(@RequestBody Order order) {
-        return new ResponseEntity<>(order, HttpStatus.CREATED);
+        Order createdOrder = orderService.create(order);
+        return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
     }
 
     /**
@@ -67,15 +75,8 @@ public class OrderController {
      */
     @PutMapping(value = "/{id}")
     public ResponseEntity<Order> update(@RequestBody Order order, @PathVariable Long id) {
-        //you need find order there
-        Order findOrder = new Order();
-        findOrder.setStart(order.getStart());
-        findOrder.setFinish(order.getFinish());
-        findOrder.setDoctor(order.getDoctor());
-        findOrder.setPatient(order.getPatient());
-        findOrder.setProcedure(order.getProcedure());
-        findOrder.setCost(order.getCost());
-        return new ResponseEntity<>(findOrder, HttpStatus.OK);
+        Order updatedOrder = orderService.update(order, id);
+        return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
     }
 
     /**
@@ -86,8 +87,8 @@ public class OrderController {
      */
     @PatchMapping(value = "/{id}")
     public ResponseEntity<Order> patch(@RequestBody Map<String, Object> fields, @PathVariable Long id) {
-        //update order there
-        return new ResponseEntity<>(new Order(), HttpStatus.OK);
+        Order patchedOrder = orderService.patch(fields, id);
+        return new ResponseEntity<>(patchedOrder, HttpStatus.OK);
     }
 
     /**
@@ -98,6 +99,8 @@ public class OrderController {
      */
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        return ResponseEntity.ok().build();
+        System.out.println(id);
+        orderService.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
