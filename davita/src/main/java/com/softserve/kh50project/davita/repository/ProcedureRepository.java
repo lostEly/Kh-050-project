@@ -1,5 +1,6 @@
 package com.softserve.kh50project.davita.repository;
 
+
 import com.softserve.kh50project.davita.model.Procedure;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
