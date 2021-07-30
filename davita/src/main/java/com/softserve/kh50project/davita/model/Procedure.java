@@ -1,30 +1,36 @@
 package com.softserve.kh50project.davita.model;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalTime;
-import java.util.List;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @Entity(name = "procedure")
+@ToString
 public class Procedure {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long procedureId;
+    private Long procedureId;
 
     @Column(nullable = false)
     @Size(max = 45)
-    String name;
+    private String name;
 
     @Column(nullable = false)
-    LocalTime duration;
+    private LocalTime duration;
 
     @Column(nullable = false)
-    Double cost;
+    private Double cost;
 
-    @ManyToOne(targetEntity = Equipment.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "equipment_id", nullable = false)
-    Equipment equipment;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "equipment_id")
+    @ToString.Exclude
+    private Equipment equipment;
 }
