@@ -1,10 +1,7 @@
 package com.softserve.kh50project.davita.service.impl;
 
 import com.softserve.kh50project.davita.exceptions.ResourceNotFoundException;
-import com.softserve.kh50project.davita.model.Doctor;
 import com.softserve.kh50project.davita.model.Order;
-import com.softserve.kh50project.davita.model.Patient;
-import com.softserve.kh50project.davita.model.Procedure;
 import com.softserve.kh50project.davita.repository.DoctorRepository;
 import com.softserve.kh50project.davita.repository.OrderRepository;
 import com.softserve.kh50project.davita.repository.PatientRepository;

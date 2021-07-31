@@ -99,7 +99,6 @@ public class OrderController {
      */
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        System.out.println(id);
         orderService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
