@@ -36,4 +36,5 @@ public class Order {
     @ManyToOne(targetEntity = Doctor.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id")
     Doctor doctor;
+
 }

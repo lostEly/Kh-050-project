@@ -49,6 +49,7 @@ import org.springframework.restdocs.constraints.ConstraintDescriptions;
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
 
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -63,6 +64,7 @@ import javax.persistence.*;
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest(classes = DavitaApplication.class)
+@TestPropertySource(locations = "classpath:application-test-order.properties")
 public class ApiDocOrderTest {
 
     final static int TEST_LIST_SIZE = 5;
@@ -248,7 +250,7 @@ public class ApiDocOrderTest {
         crud.put("id", findId);
 
         this.mockMvc
-            .perform(get("/orders/find_by_id")
+            .perform(get("/orders/{id}",findId)
                     .contentType(MediaTypes.HAL_JSON)
                     .content(this.objectMapper.writeValueAsString(crud)))
             .andExpect(status().isOk())
