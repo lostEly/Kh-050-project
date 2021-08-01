@@ -12,10 +12,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -308,6 +309,23 @@ class OrderRepositoryTest {
                 doctors.get(0));
         List<Order> foundOrders = orderRepository.findAll(specification);
         assertEquals(foundOrders.size(), 1);
+    }
+
+    @Test
+    @DisplayName("delete order: by id")
+    void deleteById() {
+        long firstId = orders.get(0).getOrderId();
+        orderRepository.deleteById(firstId);
+
+        Exception exception = assertThrows(NoSuchElementException.class, () -> {
+            Order orderFirst = orderRepository.findById(firstId).get();
+        });
+
+        String expectedMessage = "No value present";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+
     }
 
 }
