@@ -1,7 +1,10 @@
 package com.softserve.kh50project.davita.service.impl;
 
 import com.softserve.kh50project.davita.exceptions.ResourceNotFoundException;
+import com.softserve.kh50project.davita.model.Doctor;
 import com.softserve.kh50project.davita.model.Order;
+import com.softserve.kh50project.davita.model.Patient;
+import com.softserve.kh50project.davita.model.Procedure;
 import com.softserve.kh50project.davita.repository.DoctorRepository;
 import com.softserve.kh50project.davita.repository.OrderRepository;
 import com.softserve.kh50project.davita.repository.PatientRepository;
@@ -33,13 +36,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> read(String start, String finish, long procedureId, long patientId, long doctorId) {
-        Specification<Order> specification = orderRepository.getOrderQuery(
-                LocalDateTime.parse(start),
-                LocalDateTime.parse(finish),
-                procedureRepository.getById(procedureId),
-                patientRepository.getById(patientId),
-                doctorRepository.getById(doctorId));
+    public List<Order> read(LocalDateTime start, LocalDateTime finish, Procedure procedure, Doctor doctor, Patient patient ) {
+        Specification<Order> specification = orderRepository.getOrderQuery(start,finish,procedure,doctor,patient);
         return orderRepository.findAll(specification);
     }
 
@@ -49,9 +47,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order update(Order newProcedure, Long id) {
-        newProcedure.setOrderId(id);
-        return orderRepository.save(newProcedure);
+    public Order update(Order updatedOrder, Long id) {
+        Order findOrder = readById(id);
+        findOrder.setStart(updatedOrder.getStart());
+        findOrder.setFinish(updatedOrder.getFinish());
+        findOrder.setCost(updatedOrder.getCost());
+        findOrder.setProcedure(updatedOrder.getProcedure());
+        findOrder.setPatient(updatedOrder.getPatient());
+        findOrder.setDoctor(updatedOrder.getDoctor());
+        return orderRepository.save(findOrder);
     }
 
     @Override

@@ -250,8 +250,8 @@ class OrderRepositoryTest {
                 null,
                 null,
                 null,
-                patients.get(0),
-                null);
+                null,
+                patients.get(0));
         List<Order> foundOrders = orderRepository.findAll(specification);
         assertEquals(foundOrders.size(), 1);
 
@@ -263,8 +263,8 @@ class OrderRepositoryTest {
                 null,
                 null,
                 null,
-                curPatient,
-                null);
+                null,
+                curPatient);
         foundOrders = orderRepository.findAll(specification);
         assertEquals(foundOrders.size(), orders.size());
     }
@@ -276,8 +276,8 @@ class OrderRepositoryTest {
                 null,
                 null,
                 null,
-                null,
-                doctors.get(0));
+                doctors.get(0),
+                null);
         List<Order> foundOrders = orderRepository.findAll(specification);
         assertEquals(foundOrders.size(), 1);
 
@@ -289,8 +289,8 @@ class OrderRepositoryTest {
                 null,
                 null,
                 null,
-                null,
-                curDoctor);
+                curDoctor,
+                null);
         foundOrders = orderRepository.findAll(specification);
         assertEquals(foundOrders.size(), 5);
     }
@@ -305,8 +305,8 @@ class OrderRepositoryTest {
                 startDate,
                 finishDate,
                 procedures.get(0),
-                patients.get(0),
-                doctors.get(0));
+                doctors.get(0),
+                patients.get(0));
         List<Order> foundOrders = orderRepository.findAll(specification);
         assertEquals(foundOrders.size(), 1);
     }

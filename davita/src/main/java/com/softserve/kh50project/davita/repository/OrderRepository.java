@@ -18,7 +18,7 @@ import java.util.Objects;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecificationExecutor<Order> {
 
-    default Specification<Order> getOrderQuery(LocalDateTime start, LocalDateTime finish, Procedure procedure, Patient patient, Doctor doctor) {
+    default Specification<Order> getOrderQuery(LocalDateTime start, LocalDateTime finish, Procedure procedure, Doctor doctor, Patient patient) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -31,11 +31,11 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
             if (!Objects.isNull(procedure)) {
                 predicates.add(criteriaBuilder.equal(root.get("procedure"), procedure));
             }
-            if (!Objects.isNull(patient)) {
-                predicates.add(criteriaBuilder.equal(root.get("patient"), patient));
-            }
             if (!Objects.isNull(doctor)) {
                 predicates.add(criteriaBuilder.equal(root.get("doctor"), doctor));
+            }
+            if (!Objects.isNull(patient)) {
+                predicates.add(criteriaBuilder.equal(root.get("patient"), patient));
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
