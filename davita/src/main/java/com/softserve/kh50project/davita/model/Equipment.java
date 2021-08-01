@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -26,7 +27,7 @@ public class Equipment {
     )
     @JsonManagedReference
     @ToString.Exclude
-    List<Procedure> procedures;
+    List<Procedure> procedures = new ArrayList<>();
 
     public void addProcedure(Procedure procedure) {
         procedures.add(procedure);
@@ -38,3 +39,4 @@ public class Equipment {
         procedure.setEquipment(null);
     }
 }
+

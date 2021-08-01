@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@Entity(name = "permission")
+@Entity()
 public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

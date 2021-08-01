@@ -1,7 +1,7 @@
 package com.softserve.kh50project.davita.repository;
 
+
 import com.softserve.kh50project.davita.model.Procedure;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -42,7 +42,7 @@ public interface ProcedureRepository extends JpaRepository<Procedure, Long>, Jpa
     @Transactional
     @Modifying
     @Query(
-            value = "update procedure set equipment_equipment_id = :equipmentId where procedure_id = :procedureId",
+            value = "update procedure set equipment_id = :equipmentId where procedure_id = :procedureId",
             nativeQuery = true)
     void registerEquipment(@Param("procedureId") Long procedureId, @Param("equipmentId") Long equipmentId);
 }

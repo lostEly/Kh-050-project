@@ -25,15 +25,15 @@ public class Order {
     @Column(nullable = false)
     Double cost;
 
-    @ManyToOne(targetEntity = Procedure.class, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = Procedure.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "procedure_id")
     Procedure procedure;
 
-    @ManyToOne(targetEntity = Patient.class, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = Patient.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id")
     Patient patient;
 
-    @ManyToOne(targetEntity = Doctor.class, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = Doctor.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id")
     Doctor doctor;
 }
