@@ -25,7 +25,6 @@ public class Equipment {
             mappedBy = "equipment",
             cascade = CascadeType.ALL
     )
-    @JsonManagedReference
     @ToString.Exclude
     List<Procedure> procedures = new ArrayList<>();
 
