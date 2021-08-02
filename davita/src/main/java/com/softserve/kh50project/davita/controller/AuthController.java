@@ -1,6 +1,6 @@
 package com.softserve.kh50project.davita.controller;
 
-
+import com.softserve.kh50project.davita.configuration.jwt.JwtFilter;
 import com.softserve.kh50project.davita.configuration.jwt.JwtProvider;
 import com.softserve.kh50project.davita.model.User;
 import com.softserve.kh50project.davita.service.impl.UserServiceImpl;
@@ -15,7 +15,8 @@ import javax.validation.Valid;
 public class AuthController {
 
     private UserServiceImpl userServiceImpl;
-    private JwtProvider jwtProvider;
+    private JwtProvider jwtProviderl;
+
 
     @Autowired
     public void setUserServiceImpl(UserServiceImpl userServiceImpl) {
