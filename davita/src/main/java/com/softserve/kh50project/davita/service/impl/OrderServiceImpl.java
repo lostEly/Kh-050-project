@@ -19,6 +19,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
 
 @Service
 @AllArgsConstructor
@@ -79,22 +82,22 @@ public class OrderServiceImpl implements OrderService {
         for (String fieldName : fields.keySet()) {
             switch (fieldName) {
                 case "start":
-                    order.setStart(LocalDateTime.parse((String)fields.get("start")));
+                    order.setStart(LocalDateTime.parse((String) fields.get("start")));
                     break;
                 case "finish":
-                    order.setFinish(LocalDateTime.parse((String)fields.get("finish")));
+                    order.setFinish(LocalDateTime.parse((String) fields.get("finish")));
                     break;
                 case "cost":
-                    order.setCost((Double)fields.get("cost"));
+                    order.setCost((Double) fields.get("cost"));
                     break;
                 case "procedureId":
-                    order.setProcedure(procedureRepository.getById((Long)fields.get("procedureId")));
+                    order.setProcedure(procedureRepository.getById((Long) fields.get("procedureId")));
                     break;
                 case "doctorId":
-                    order.setDoctor(doctorRepository.getById((Long)fields.get("doctorId")));
+                    order.setDoctor(doctorRepository.getById((Long) fields.get("doctorId")));
                     break;
                 case "patientId":
-                    order.setPatient(patientRepository.getById((Long)fields.get("patientId")));
+                    order.setPatient(patientRepository.getById((Long) fields.get("patientId")));
                     break;
             }
         }
@@ -114,8 +117,23 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.deleteById(id);
     }
 
+    @Override
+    public List<OrderDto> findAllFreeOrdersByProcedure(Long procedureId) {
+        return orderRepository.findAllFreeOrdersByProcedure(procedureId).stream()
+                .map(this::convertOrderToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderDto> findAllPatientOrders(Long patientId) {
+        return orderRepository.findAllPatientOrders(patientId).stream()
+                .map(this::convertOrderToDto)
+                .collect(Collectors.toList());
+    }
+
     private Order convertDtoToOrder(OrderDto orderDto) {
         Order order = new Order();
+        order.setOrderId(orderDto.getOrderId());
         order.setStart(LocalDateTime.parse(orderDto.getStart()));
         order.setFinish(LocalDateTime.parse(orderDto.getFinish()));
         order.setCost(orderDto.getCost());
@@ -127,12 +145,19 @@ public class OrderServiceImpl implements OrderService {
 
     private OrderDto convertOrderToDto(Order order) {
         OrderDto orderDto = new OrderDto();
-        orderDto.setStart(order.getStart().toString());
-        orderDto.setFinish(order.getFinish().toString());
-        orderDto.setCost(orderDto.getCost());
-        orderDto.setProcedureId(order.getProcedure().getProcedureId());
-        orderDto.setDoctorId(order.getDoctor().getUserId());
-        orderDto.setPatientId(order.getPatient().getUserId());
+        orderDto.setOrderId(order.getOrderId());
+        orderDto.setStart(String.valueOf(order.getStart()));
+        orderDto.setFinish(String.valueOf(order.getFinish()));
+        orderDto.setCost(order.getCost());
+        if (nonNull(order.getProcedure())) {
+            orderDto.setProcedureId(order.getProcedure().getProcedureId());
+        }
+        if (nonNull(order.getDoctor())) {
+            orderDto.setDoctorId(order.getDoctor().getUserId());
+        }
+        if (nonNull(order.getPatient())) {
+            orderDto.setPatientId(order.getPatient().getUserId());
+        }
         return orderDto;
     }
 }
