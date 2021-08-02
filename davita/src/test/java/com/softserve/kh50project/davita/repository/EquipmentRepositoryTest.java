@@ -5,17 +5,14 @@ import com.softserve.kh50project.davita.model.Equipment;
 import com.softserve.kh50project.davita.service.impl.EquipmentServiceImpl;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.client.RestTemplate;
 
-import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,7 +35,7 @@ public class EquipmentRepositoryTest {
 
     private List<Equipment> equipmentList;
 
-    private static final String ROOT_URL = "http://localhost:8080";
+    private static final String ROOT_URL = "http://localhost:8080/ss-ita-davita-api";
 
     RestTemplate restTemplate = new RestTemplate();
 
@@ -136,6 +133,7 @@ public class EquipmentRepositoryTest {
     @Test
     @Order(7)
     @DisplayName("testGetAllPosts using URL")
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:dataForTests/data-equipment.sql")
     public void testGetAllPosts() {
         ResponseEntity<Equipment[]> responseEntity =
                 restTemplate.getForEntity(ROOT_URL + "/equipment", Equipment[].class);
@@ -160,7 +158,7 @@ public class EquipmentRepositoryTest {
     @Order(9)
     @DisplayName("testGetPostById using URL")
     public void testGetPostById() {
-        Equipment equipment = restTemplate.getForObject(ROOT_URL + "/equipment/24", Equipment.class);
+        Equipment equipment = restTemplate.getForObject(ROOT_URL + "/equipment/1", Equipment.class);
         assertNotNull(equipment);
     }
 
@@ -171,8 +169,9 @@ public class EquipmentRepositoryTest {
     @Test
     @Order(10)
     @DisplayName("testUpdatePost using URL")
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:dataForTests/data-equipment.sql")
     public void testUpdatePost() {
-        int id = 27;
+        int id = 1;
         Equipment post = restTemplate.getForObject(ROOT_URL + "/equipment/" + id, Equipment.class);
         post.setName("This my updated post1 content");
         restTemplate.put(ROOT_URL + "/equipment/" + id, post);
