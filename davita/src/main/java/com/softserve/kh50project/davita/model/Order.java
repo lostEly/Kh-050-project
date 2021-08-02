@@ -1,12 +1,16 @@
 package com.softserve.kh50project.davita.model;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Data
+//@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @Entity(name = "orderr")
+@ToString
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,4 +36,5 @@ public class Order {
     @ManyToOne(targetEntity = Doctor.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id")
     Doctor doctor;
+
 }
