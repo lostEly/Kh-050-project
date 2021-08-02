@@ -83,21 +83,19 @@ public class ApiDocEquipment {
 
 
     @Test
-    @Disabled
+    @Order(5)
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:dataForTests/data-equipment.sql")
     public void crudPatchExample() throws Exception {
 
         Map<String, Object> crud = new HashMap<>();
-        crud.put("equipment_id", 1);
         crud.put("name", "Hospital beds.");
 
 
         this.mockMvc.perform(patch("/equipment/{id}", 1).contentType(MediaTypes.HAL_JSON)
                 .content(this.objectMapper.writeValueAsString(crud)))
                 .andExpect(status().isOk())
-                .andDo(document("equipment-put-example", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+                .andDo(document("crud-patch-equipment", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
                         requestFields(
-                                fieldWithPath("equipment_id").description("The title of the input"),
                                 fieldWithPath("name").description("The title of the input")
                         )));
     }

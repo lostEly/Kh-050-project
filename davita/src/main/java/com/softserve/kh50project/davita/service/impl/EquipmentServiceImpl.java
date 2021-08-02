@@ -49,7 +49,7 @@ public class EquipmentServiceImpl implements EquipmentService {
     public Equipment patch(Map<String, Object> fields, Long id) {
         Equipment equipment = readById(id);
         fields.forEach((k, v) -> {
-            Field field = ReflectionUtils.findField(Procedure.class, k);
+            Field field = ReflectionUtils.findField(Equipment.class, k);
             field.setAccessible(true);
             ReflectionUtils.setField(field, equipment, v);
         });

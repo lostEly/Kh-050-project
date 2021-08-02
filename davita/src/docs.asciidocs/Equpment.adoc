@@ -138,8 +138,24 @@ include::{snippets}/crud-delete-equipment/http-response.adoc[]
 include::{snippets}/crud-delete-equipment/curl-request.adoc[]
 
 [[resources-crud-patch]]
-=== Accessing the crud PUT
+=== Accessing the crud PATCH
 
+A `PATCH` request is used to access the CRUD update.
+
+==== Request structure
+
+include::{snippets}/crud-patch-equipment/http-request.adoc[]
+
+==== Example response
+
+include::{snippets}/crud-patch-equipment/http-response.adoc[]
+
+==== CURL request
+
+include::{snippets}/crud-patch-equipment/curl-request.adoc[]
+
+[[resources-crud-put]]
+=== Accessing the crud PUT
 
 A `PUT` request is used to access the CRUD update.
 
