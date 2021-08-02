@@ -1,4 +1,4 @@
-package com.softserve.kh50project.davita.config.jwt;
+package com.softserve.kh50project.davita.configuration;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -1,7 +1,5 @@
-package com.softserve.kh50project.davita.config.jwt;
+package com.softserve.kh50project.davita.configuration;
 
-import com.softserve.kh50project.davita.config.CustomUserDetails;
-import com.softserve.kh50project.davita.config.CustomUserDetailsService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

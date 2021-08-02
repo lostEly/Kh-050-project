@@ -1,7 +1,7 @@
 package com.softserve.kh50project.davita.controller;
 
 
-import com.softserve.kh50project.davita.config.jwt.JwtProvider;
+import com.softserve.kh50project.davita.configuration.JwtProvider;
 import com.softserve.kh50project.davita.model.User;
 import com.softserve.kh50project.davita.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

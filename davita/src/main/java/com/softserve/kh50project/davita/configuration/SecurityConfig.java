@@ -1,7 +1,6 @@
-package com.softserve.kh50project.davita.config;
+package com.softserve.kh50project.davita.configuration;
 
 
-import com.softserve.kh50project.davita.config.jwt.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

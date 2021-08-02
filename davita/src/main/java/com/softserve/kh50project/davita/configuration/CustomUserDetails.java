@@ -1,4 +1,4 @@
-package com.softserve.kh50project.davita.config;
+package com.softserve.kh50project.davita.configuration;
 
 import com.softserve.kh50project.davita.model.User;
 import org.springframework.security.core.GrantedAuthority;

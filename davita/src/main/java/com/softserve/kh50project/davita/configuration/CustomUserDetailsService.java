@@ -1,9 +1,8 @@
-package com.softserve.kh50project.davita.config;
+package com.softserve.kh50project.davita.configuration;
 
 import com.softserve.kh50project.davita.model.User;
 import com.softserve.kh50project.davita.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
