@@ -1,5 +1,8 @@
-package com.softserve.kh50project.davita.configuration;
+package com.softserve.kh50project.davita.configuration.jwt;
 
+import com.softserve.kh50project.davita.configuration.CustomUserDetails;
+import com.softserve.kh50project.davita.configuration.CustomUserDetailsService;
+import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,20 +22,21 @@ import static org.springframework.util.StringUtils.hasText;
 
 @Component
 @Log
+@AllArgsConstructor
 public class JwtFilter extends GenericFilterBean {
 
     public static final String AUTHORIZATION = "Authorization";
     private JwtProvider jwtProvider;
     private CustomUserDetailsService customUserDetailsService;
 
-    @Autowired
-    public void setJwtProvider(JwtProvider jwtProvider) {
-        this.jwtProvider = jwtProvider;
-    }
-    @Autowired
-    public void setCustomUserDetailsService(CustomUserDetailsService customUserDetailsService) {
-        this.customUserDetailsService = customUserDetailsService;
-    }
+//    @Autowired
+//    public void setJwtProvider(JwtProvider jwtProvider) {
+//        this.jwtProvider = jwtProvider;
+//    }
+//    @Autowired
+//    public void setCustomUserDetailsService(CustomUserDetailsService customUserDetailsService) {
+//        this.customUserDetailsService = customUserDetailsService;
+//    }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

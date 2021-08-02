@@ -1,9 +1,9 @@
 package com.softserve.kh50project.davita.controller;
 
 
-import com.softserve.kh50project.davita.configuration.JwtProvider;
+import com.softserve.kh50project.davita.configuration.jwt.JwtProvider;
 import com.softserve.kh50project.davita.model.User;
-import com.softserve.kh50project.davita.service.impl.UserService;
+import com.softserve.kh50project.davita.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,12 +14,12 @@ import javax.validation.Valid;
 @RestController
 public class AuthController {
 
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
     private JwtProvider jwtProvider;
 
     @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
+    public void setUserServiceImpl(UserServiceImpl userServiceImpl) {
+        this.userServiceImpl = userServiceImpl;
     }
 
     @Autowired
@@ -32,13 +32,13 @@ public class AuthController {
         User u = new User();
         u.setPassword(registrationRequest.getPassword());
         u.setLogin(registrationRequest.getLogin());
-        userService.saveUser(u);
+        userServiceImpl.saveUser(u);
         return "OK";
     }
 
     @PostMapping("/auth")      //signin
     public AuthResponse auth(@RequestBody AuthRequest request) {
-        User user = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
+        User user = userServiceImpl.findByLoginAndPassword(request.getLogin(), request.getPassword());
         String token = jwtProvider.generateToken(user.getLogin());
         return new AuthResponse(token);
     }
