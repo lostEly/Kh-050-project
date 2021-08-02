@@ -48,7 +48,8 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public DoctorDto update(DoctorDto doctorDto, Long id) {
-        doctorDto.setUserId(id);
+        DoctorDto existingDoctor = readById(id);
+        doctorDto.setUserId(existingDoctor.getUserId());
         Doctor doctor = doctorMapper.mapFrom(doctorDto);
         return doctorMapper.mapTo(doctorRepository.save(doctor));
     }
@@ -68,6 +69,12 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public void delete(Long id) {
+        try {
+            readById(id);
+        } catch (ResourceNotFoundException e) {
+            return;
+        }
+
         doctorRepository.deleteById(id);
     }
 }

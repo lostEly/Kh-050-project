@@ -32,7 +32,7 @@ public class PatientServiceImpl implements PatientService {
     public PatientDto readById(Long id) {
         return patientRepository.findById(id)
                 .map(patientMapper::mapTo)
-                .orElseThrow(()-> new ResourceNotFoundException("Patient with id " + id + " "));
+                .orElseThrow(() -> new ResourceNotFoundException("Patient with id " + id + " "));
     }
 
     @Override
@@ -50,7 +50,8 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public PatientDto update(PatientDto patientDto, Long id) {
-        patientDto.setUserId(id);
+        PatientDto existingPatient = readById(id);
+        patientDto.setUserId(existingPatient.getUserId());
         Patient patient = patientMapper.mapFrom(patientDto);
         return patientMapper.mapTo(patientRepository.save(patient));
     }
@@ -70,6 +71,12 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public void delete(Long id) {
+        try {
+            readById(id);
+        } catch (ResourceNotFoundException e) {
+            return;
+        }
+
         patientRepository.deleteById(id);
     }
 }
