@@ -48,7 +48,8 @@ public class EquipmentServiceImpl implements EquipmentService {
         return equipmentList
                 .stream()
                 .map(this::convertEquipmentToDto)
-                .collect(Collectors.toList());    }
+                .collect(Collectors.toList());
+    }
 
     @Override
     public EquipmentDto create(EquipmentDto equipmentDto) {
@@ -104,7 +105,13 @@ public class EquipmentServiceImpl implements EquipmentService {
 
     @Override
     public void delete(Long id) {
+        try {
+            readById(id);
+        } catch (ResourceNotFoundException e) {
+            return;
+        }
+
         equipmentRepository.deleteById(id);
     }
-
 }
+
