@@ -5,7 +5,10 @@ import com.softserve.kh50project.davita.dto.OrderDto;
 import com.softserve.kh50project.davita.dto.PatientDto;
 import com.softserve.kh50project.davita.dto.ProcedureDto;
 import com.softserve.kh50project.davita.exceptions.ResourceNotFoundException;
+import com.softserve.kh50project.davita.model.Doctor;
 import com.softserve.kh50project.davita.model.Order;
+import com.softserve.kh50project.davita.model.Patient;
+import com.softserve.kh50project.davita.model.Procedure;
 import com.softserve.kh50project.davita.repository.DoctorRepository;
 import com.softserve.kh50project.davita.repository.OrderRepository;
 import com.softserve.kh50project.davita.repository.PatientRepository;
@@ -110,6 +113,8 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(ResourceNotFoundException::new);
         orderRepository.deleteById(id);
     }
+
+
 
     private Order convertDtoToOrder(OrderDto orderDto) {
         Order order = new Order();

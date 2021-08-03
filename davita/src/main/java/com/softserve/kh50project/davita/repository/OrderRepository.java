@@ -23,10 +23,10 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
             List<Predicate> predicates = new ArrayList<>();
 
             if (!Objects.isNull(start)) {
-                predicates.add(criteriaBuilder.equal(root.get("start"), start));
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("start"), start));
             }
             if (!Objects.isNull(finish)) {
-                predicates.add(criteriaBuilder.equal(root.get("finish"), finish));
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("finish"), finish));
             }
             if (!Objects.isNull(procedure)) {
                 predicates.add(criteriaBuilder.equal(root.get("procedure"), procedure));

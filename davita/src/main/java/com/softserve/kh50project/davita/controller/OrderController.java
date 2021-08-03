@@ -5,17 +5,15 @@ import com.softserve.kh50project.davita.service.DoctorService;
 import com.softserve.kh50project.davita.service.OrderService;
 import com.softserve.kh50project.davita.service.PatientService;
 import com.softserve.kh50project.davita.service.ProcedureService;
-import com.softserve.kh50project.davita.service.impl.DoctorServiceImpl;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +39,6 @@ public class OrderController {
      * Getting order by id
      *
      * @param id Long
-     *
      * @return The OrderDto by id
      */
     @GetMapping(value = "/{id}")
@@ -53,27 +50,17 @@ public class OrderController {
     /**
      * Getting orders by param
      *
-     * @param start         String
-     * @param finish        String
-     * @param procedureId   Long
-     * @param doctorId      Long
-     * @param patientId     Long
-     *
+     * @param fields Map<String, Object> (start,finish,procedureId,doctorId,patientId)
      * @return The List<OrderDto> of orders. If all fields == null -> return all Orders
      */
     @GetMapping
-    public ResponseEntity<List<OrderDto>> read(
-            @RequestParam(value = "start", required = false) String start,
-            @RequestParam(value = "finish", required = false) String finish,
-            @RequestParam(value = "procedureId", required = false) Long procedureId,
-            @RequestParam(value = "doctorId", required = false) Long doctorId,
-            @RequestParam(value = "patientId", required = false) Long patientId) {
+    public ResponseEntity<List<OrderDto>> read(@RequestBody Map<String, Object> fields) {
         List<OrderDto> ordersDto = orderService.read(
-                (start != null) ? LocalDateTime.parse(start) : null,
-                (finish != null) ? LocalDateTime.parse(finish) : null,
-                (procedureId != null) ? procedureService.readById(procedureId) : null,
-                (doctorId != null) ? doctorService.readById(doctorId) : null,
-                (patientId != null) ? patientService.readById(patientId) : null
+                (fields.get("start") != null) ? LocalDateTime.parse((String) fields.get("start")) : null,
+                (fields.get("finish") != null) ? LocalDateTime.parse((String) fields.get("finish")) : null,
+                (fields.get("procedureId") != null) ? procedureService.readById(Long.parseLong(fields.get("procedureId").toString())) : null,
+                (fields.get("doctorId") != null) ? doctorService.readById(Long.parseLong(fields.get("doctorId").toString())) : null,
+                (fields.get("patientId") != null) ? patientService.readById(Long.parseLong(fields.get("patientId").toString())) : null
         );
         return new ResponseEntity<>(ordersDto, HttpStatus.OK);
     }
@@ -81,8 +68,7 @@ public class OrderController {
     /**
      * Creating new order
      *
-     * @param orderDto      OrderDto
-     *
+     * @param orderDto OrderDto
      * @return The new OrderDto
      */
     @PostMapping
@@ -94,9 +80,8 @@ public class OrderController {
     /**
      * Updating the order
      *
-     * @param orderDto  OrderDto
-     * @param id        Long
-     *
+     * @param orderDto OrderDto
+     * @param id       Long
      * @return The updated order
      */
     @PutMapping(value = "/{id}")
@@ -108,9 +93,8 @@ public class OrderController {
     /**
      * Partial updating the order
      *
-     * @param fields    Map<String, Object>
-     * @param id        Long
-     *
+     * @param fields Map<String, Object>
+     * @param id     Long
      * @return partly updated order
      */
     @PatchMapping(value = "/{id}")
@@ -122,13 +106,30 @@ public class OrderController {
     /**
      * Deleting the order
      *
-     * @param id    Long
-     *
+     * @param id Long
      * @return ResponseEntity with status OK
      */
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         orderService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * Getting orders without doctor from start to finish
+     *
+     * @param idList   List<Long>
+     * @param doctorId Long
+     * @return The List<OrderDto> of orders
+     */
+    @PatchMapping(value = "/bookOrdersForDoctor/{doctorId}")
+    public ResponseEntity<List<OrderDto>> bookOrders(@RequestBody List<Long> idList, @PathVariable Long doctorId) {
+        List<OrderDto> ordersDto = new ArrayList<>();
+        Map<String, Object> patchFields = new HashMap<>();
+        patchFields.put("doctorId", doctorId);
+        for (Long idOrder : idList) {
+            ordersDto.add(orderService.patch(patchFields, idOrder));
+        }
+        return new ResponseEntity<>(ordersDto, HttpStatus.OK);
     }
 }

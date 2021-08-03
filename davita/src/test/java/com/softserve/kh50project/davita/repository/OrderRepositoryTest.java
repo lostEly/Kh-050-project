@@ -10,9 +10,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import org.junit.jupiter.api.*;
 
@@ -133,7 +131,6 @@ class OrderRepositoryTest {
     @DisplayName("find orders: all, DB is empty")
     void findAll1() {
         for (Order order : orders) {
-            System.out.println(order.getOrderId());
             entityManager.remove(order);
         }
         List<Order> foundOrders = orderRepository.findAll();
@@ -158,62 +155,31 @@ class OrderRepositoryTest {
     @DisplayName("find orders: all, specification (start, null, null, null, null)")
     void getProcedureQueryStart() {
         //2021-07-01T10:15:00   2021-07-01T10:30:00
-        LocalDateTime startDate = LocalDateTime.parse("2021-07-01T10:15:00");
         Specification<Order> specification = orderRepository.getOrderQuery(
-                startDate,
+                LocalDateTime.parse("2021-07-02T10:15:00"),
                 null,
                 null,
                 null,
-                null
-        );
+                null);
         List<Order> foundOrders = orderRepository.findAll(specification);
-        assertEquals(foundOrders.size(), 1);
-        assertEquals(foundOrders.get(0).getStart(), startDate);
-
-        for (Order order : orders) {
-            order.setStart(startDate);
-            entityManager.persistAndFlush(order);
-        }
-        specification = orderRepository.getOrderQuery(
-                startDate,
-                null,
-                null,
-                null,
-                null
-        );
-        foundOrders = orderRepository.findAll(specification);
-        assertEquals(foundOrders.size(), orders.size());
+        assertEquals(foundOrders.size(), 4);
     }
 
     @Test
     @DisplayName("find orders: all, specification (null, finish, null, null, null)")
     void getProcedureQueryFinish() {
         //2021-07-01T10:15:00   2021-07-01T10:30:00
-        LocalDateTime finishDate = LocalDateTime.parse("2021-07-01T10:30:00");
         Specification<Order> specification = orderRepository.getOrderQuery(
                 null,
-                finishDate,
+                LocalDateTime.parse("2021-07-03T10:30:00"),
                 null,
                 null,
                 null
         );
         List<Order> foundOrders = orderRepository.findAll(specification);
-        assertEquals(foundOrders.size(), 1);
+        assertEquals(foundOrders.size(), 3);
         assertEquals(foundOrders.get(0), orders.get(0));
 
-        for (Order order : orders) {
-            order.setFinish(finishDate);
-            entityManager.persistAndFlush(order);
-        }
-        specification = orderRepository.getOrderQuery(
-                null,
-                finishDate,
-                null,
-                null,
-                null
-        );
-        foundOrders = orderRepository.findAll(specification);
-        assertEquals(foundOrders.size(), orders.size());
     }
 
     @Test
