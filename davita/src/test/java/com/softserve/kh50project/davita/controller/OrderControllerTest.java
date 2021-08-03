@@ -186,7 +186,7 @@ class OrderControllerTest {
 
     @Order(12)
     @Test
-    void doctorCalendar() throws Exception {
+    void doctorNextDayCalendar() throws Exception {
         String startStr = "2021-07-02T00:00:01";
         LocalDateTime start = LocalDateTime.parse(startStr);
         LocalDateTime finish = start.plusDays(1).withHour(23).withMinute(59).withSecond(59);
