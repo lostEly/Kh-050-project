@@ -119,14 +119,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> findAllFreeOrdersByProcedure(Long procedureId) {
-        return orderRepository.findAllFreeOrdersByProcedure(procedureId).stream()
+        return orderRepository.findAllByDoctorUserIdIsNotNullAndPatientUserIdIsNullAndProcedureProcedureIdAndStartGreaterThan(procedureId, LocalDateTime.now()).stream()
                 .map(this::convertOrderToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<OrderDto> findAllPatientOrders(Long patientId) {
-        return orderRepository.findAllPatientOrders(patientId).stream()
+        return orderRepository.findAllByDoctorUserIdIsNotNullAndPatientUserId(patientId).stream()
                 .map(this::convertOrderToDto)
                 .collect(Collectors.toList());
     }
