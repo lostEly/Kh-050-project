@@ -23,16 +23,16 @@ public class User {
     String login;
 
     @Column(nullable = false)
-    @Size(max = 25)
+    @Size(max = 128)
     String password;
 
     @Column(nullable = false)
     @Size(max = 45)
-    String name;
+    String name="";
 
     @Column(nullable = false)
     @Size(max = 45)
-    String lastName;
+    String lastName="";
 
     @Column
     LocalDate dateOfBirthday;
@@ -51,7 +51,7 @@ public class User {
             CascadeType.PERSIST,
             CascadeType.MERGE
     })
-    @JoinTable(name = "user_role",
+    @JoinTable(name = "userr_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
