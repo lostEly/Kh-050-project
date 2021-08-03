@@ -12,7 +12,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Controller
 @RequestMapping("/")
-public class IndexController {
+public class HomeController {
 
 
     static class CustomRepresentationModel extends RepresentationModel<CustomRepresentationModel> {
