@@ -1,10 +1,8 @@
 package com.softserve.kh50project.davita.service.impl;
 
 import com.softserve.kh50project.davita.dto.EquipmentDto;
-import com.softserve.kh50project.davita.dto.ProcedureDto;
 import com.softserve.kh50project.davita.exceptions.ResourceNotFoundException;
 import com.softserve.kh50project.davita.model.Equipment;
-import com.softserve.kh50project.davita.model.Procedure;
 import com.softserve.kh50project.davita.repository.EquipmentRepository;
 import com.softserve.kh50project.davita.service.EquipmentService;
 import lombok.AllArgsConstructor;
@@ -18,7 +16,6 @@ import org.springframework.util.ReflectionUtils;
 
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,11 +32,7 @@ public class EquipmentServiceImpl implements EquipmentService {
                 .orElseThrow(ResourceNotFoundException::new);
         return convertEquipmentToDto(equipment);
     }
-/*
-    @Override
-    public List<Equipment> read() {
-        return  equipmentRepository.findAll();
-    }*/
+
 
     @Override
     public List<EquipmentDto> read(String name) {

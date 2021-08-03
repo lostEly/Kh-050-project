@@ -3,8 +3,6 @@ package com.softserve.kh50project.davita.restDoc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.kh50project.davita.DavitaApplication;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,7 @@
 package com.softserve.kh50project.davita.repository;
 
 
-import com.softserve.kh50project.davita.dto.EquipmentDto;
 import com.softserve.kh50project.davita.model.Equipment;
-import com.softserve.kh50project.davita.model.Procedure;
 import com.softserve.kh50project.davita.service.impl.EquipmentServiceImpl;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,9 +55,6 @@ public class EquipmentRepositoryTest {
     void tearDown() {
         equipmentList = null;
     }
-
-
-
 
 
     @MockBean
@@ -153,10 +148,6 @@ public class EquipmentRepositoryTest {
         assertNotNull(equipment);
     }
 
-
-
-
-
     @Test
     @DisplayName("testUpdatePost using URL")
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:dataForTests/data-equipment.sql")
@@ -168,9 +159,6 @@ public class EquipmentRepositoryTest {
         Equipment updatedPost = restTemplate.getForObject(ROOT_URL + "/equipment/" + id, Equipment.class);
         assertNotNull(updatedPost);
     }
-
-
-
 
 
     private Equipment createEquipment() {

@@ -1,8 +1,6 @@
 package com.softserve.kh50project.davita.controller;
 
 import com.softserve.kh50project.davita.dto.EquipmentDto;
-import com.softserve.kh50project.davita.dto.ProcedureDto;
-import com.softserve.kh50project.davita.model.Equipment;
 import com.softserve.kh50project.davita.service.EquipmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,14 +18,6 @@ public class EquipmentController {
     @Qualifier(value = "EquipmentServiceImpl")
     private final EquipmentService equipmentService;
 
-/*    *//**
-     * @return the list of equipment, return empty list if the equipment wasn't found
-     *//*
-    @GetMapping
-    public ResponseEntity<List<Equipment>> read() {
-        List<Equipment> equipmentList = equipmentService.read();
-        return new ResponseEntity<>(equipmentList, HttpStatus.OK);
-    }*/
 
     /**
      * Getting the equipment by id
@@ -56,7 +46,7 @@ public class EquipmentController {
      */
     @PostMapping("")
     public ResponseEntity<EquipmentDto> create(@RequestBody EquipmentDto equipmentDto) {
-        EquipmentDto createdEquipment= equipmentService.create(equipmentDto);
+        EquipmentDto createdEquipment = equipmentService.create(equipmentDto);
         return new ResponseEntity<>(createdEquipment, HttpStatus.CREATED);
     }
 
@@ -64,7 +54,7 @@ public class EquipmentController {
      * Updating the equipment
      *
      * @param equipmentDto to be updated
-     * @param id        of the equipment
+     * @param id           of the equipment
      * @return updated equipment
      */
     @PutMapping(value = "/{id}")
