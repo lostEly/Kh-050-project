@@ -2,10 +2,7 @@ package com.softserve.kh50project.davita.controller;
 
 
 import com.softserve.kh50project.davita.DavitaApplication;
-import com.softserve.kh50project.davita.dto.DoctorDto;
 import com.softserve.kh50project.davita.dto.EquipmentDto;
-import com.softserve.kh50project.davita.model.Equipment;
-import org.apache.http.client.methods.HttpHead;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -38,9 +35,8 @@ public class EquipmentControllerTest {
     private final TestRestTemplate restTemplate = new TestRestTemplate();
 
 
-    @Order(1)
-    @Sql(scripts = "classpath:dataForTests/data-equipment.sql")
     @Test
+    @Sql(scripts = "classpath:dataForTests/data-equipment.sql")
     void getEquipmentById() {
         ResponseEntity<EquipmentDto> response = restTemplate.exchange(
                 LOCALHOST + port + CONTEXT_PATH + "/equipment/1",
@@ -53,9 +49,8 @@ public class EquipmentControllerTest {
         assertEquals(1, response.getBody().getEquipmentId());
     }
 
-    @Order(2)
-    @Sql(scripts = "classpath:dataForTests/data-equipment.sql")
     @Test
+    @Sql(scripts = "classpath:dataForTests/data-equipment.sql")
     void getEquipmentWith404() {
         ResponseEntity<EquipmentDto> response = restTemplate.exchange(
                 LOCALHOST + port + CONTEXT_PATH + "/equipment/10",
@@ -67,9 +62,8 @@ public class EquipmentControllerTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
-    @Order(3)
-    @Sql(scripts = "classpath:dataForTests/data-equipment.sql")
     @Test
+    @Sql(scripts = "classpath:dataForTests/data-equipment.sql")
     void getListOfEquipment() {
         ResponseEntity<List<EquipmentDto>> response =
                 restTemplate.exchange(
@@ -84,9 +78,8 @@ public class EquipmentControllerTest {
         assertEquals(5, response.getBody().size());
     }
 
-    @Order(4)
-    @Sql(scripts = "classpath:dataForTests/data-equipment.sql")
     @Test
+    @Sql(scripts = "classpath:dataForTests/data-equipment.sql")
     void getListNamePredicate() {
         ResponseEntity<List<EquipmentDto>> response =
                 restTemplate.exchange(
@@ -101,7 +94,6 @@ public class EquipmentControllerTest {
         assertEquals(3, response.getBody().size());
     }
 
-    @Order(5)
     @Test
     void createEquipment() {
         HttpHeaders headers = new HttpHeaders();
@@ -121,7 +113,6 @@ public class EquipmentControllerTest {
         assertNotNull(responseEntity.getBody().getEquipmentId());
     }
 
-    @Order(6)
     @Test
     void updatePutMethodEquipment() {
         HttpHeaders headers = new HttpHeaders();
@@ -146,7 +137,6 @@ public class EquipmentControllerTest {
     }
 
 
-    @Order(7)
     @Test
     @Sql(scripts = "classpath:dataForTests/data-equipment.sql")
     void updatePatchMethodEquipment() {
@@ -169,7 +159,6 @@ public class EquipmentControllerTest {
         assertEquals("Medical mattress", responseEntity.getBody().getName());
     }
 
-    @Order(8)
     @Test
     @Sql(scripts = "classpath:dataForTests/data-equipment.sql")
     void deleteEquipment() {
@@ -186,7 +175,6 @@ public class EquipmentControllerTest {
     }
 
 
-    @Order(10)
     @Test
     @Sql(scripts = "classpath:dataForTests/data-equipment.sql")
     void deleteNotExisting() {

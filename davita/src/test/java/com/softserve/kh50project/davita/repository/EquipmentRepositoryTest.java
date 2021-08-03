@@ -3,6 +3,7 @@ package com.softserve.kh50project.davita.repository;
 
 import com.softserve.kh50project.davita.dto.EquipmentDto;
 import com.softserve.kh50project.davita.model.Equipment;
+import com.softserve.kh50project.davita.model.Procedure;
 import com.softserve.kh50project.davita.service.impl.EquipmentServiceImpl;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,26 +59,22 @@ public class EquipmentRepositoryTest {
     }
 
 
-    @Test
-    @Order(1)
-    @DisplayName("find by id returns correct object")
-    void findById() {
-        Equipment procedure = equipmentRepository.findById(9L).get();
-        assertEquals(procedure, equipmentList.get(8));
-    }
+
 
 
     @MockBean
     EquipmentServiceImpl equipmentService;
 
-
-
-
-
+    @Test
+    @Order(1)
+    @DisplayName("find by id returns correct object")
+    void findById() {
+        Equipment equipment = equipmentRepository.findById(4L).get();
+        assertEquals(equipment, equipmentList.get(3));
+    }
 
 
     @Test
-    @Order(2)
     @DisplayName("find all")
     void findAll() {
         List<Equipment> equipmentList = equipmentRepository.findAll();
@@ -86,7 +83,6 @@ public class EquipmentRepositoryTest {
     }
 
     @Test
-    @Order(3)
     @DisplayName("find all returns an empty list if db is empty")
     void findAll1() {
         for (Equipment equipment : equipmentList) {
@@ -98,7 +94,6 @@ public class EquipmentRepositoryTest {
 
 
     @Test
-    @Order(4)
     @DisplayName("create adds object in database")
     void create() {
         Equipment equipment = createEquipment();
@@ -109,7 +104,6 @@ public class EquipmentRepositoryTest {
 
 
     @Test
-    @Order(5)
     @DisplayName("update changes the object in database")
     void update() {
         Equipment equipment = createEquipment();
@@ -122,7 +116,6 @@ public class EquipmentRepositoryTest {
     }
 
     @Test
-    @Order(6)
     @DisplayName("delete removes the object in database")
     void delete() {
         Equipment equipment = createEquipment();
@@ -132,7 +125,6 @@ public class EquipmentRepositoryTest {
 
 
     @Test
-    @Order(7)
     @DisplayName("testGetAllPosts using URL")
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:dataForTests/data-equipment.sql")
     public void testGetAllPosts() {
@@ -144,7 +136,6 @@ public class EquipmentRepositoryTest {
 
 
     @Test
-    @Order(8)
     @DisplayName("testCreatePost using URL")
     public void testCreatePost() {
         Equipment equipment = new Equipment();
@@ -156,7 +147,6 @@ public class EquipmentRepositoryTest {
     }
 
     @Test
-    @Order(9)
     @DisplayName("testGetPostById using URL")
     public void testGetPostById() {
         Equipment equipment = restTemplate.getForObject(ROOT_URL + "/equipment/17", Equipment.class);
@@ -168,7 +158,6 @@ public class EquipmentRepositoryTest {
 
 
     @Test
-    @Order(10)
     @DisplayName("testUpdatePost using URL")
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:dataForTests/data-equipment.sql")
     public void testUpdatePost() {
@@ -179,6 +168,8 @@ public class EquipmentRepositoryTest {
         Equipment updatedPost = restTemplate.getForObject(ROOT_URL + "/equipment/" + id, Equipment.class);
         assertNotNull(updatedPost);
     }
+
+
 
 
 

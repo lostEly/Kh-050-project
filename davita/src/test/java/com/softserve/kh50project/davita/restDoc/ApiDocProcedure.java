@@ -56,18 +56,9 @@ public class ApiDocProcedure {
                 .build();
     }
 
-    @Test
-    @Disabled
-    public void indexExample() throws Exception {
-        this.mockMvc.perform(get("/"))
-                .andExpect(status().isOk())
-                .andDo(document("index-example", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()), links(linkWithRel("procedure").description("The CRUD resource")), responseFields(subsectionWithPath("_links").description("Links to other resources")),
-                        responseHeaders(headerWithName("Content-Type").description("The Content-Type of the payload, e.g. `application/hal+json`"))));
-    }
 
 
     @Test
-    @Order(1)
     public void crudCreateProcedure() throws Exception {
         Map<String, Object> crud = new HashMap<>();
         crud.put("cost", 10.20);
@@ -88,7 +79,6 @@ public class ApiDocProcedure {
 
 
     @Test
-    @Order(2)
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:dataForTests/data-procedure.sql")
     public void crudDeleteProcedure() throws Exception {
         this.mockMvc.perform(delete("/procedures/{id}", 5))
@@ -98,7 +88,6 @@ public class ApiDocProcedure {
 
 
     @Test
-    @Order(3)
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:dataForTests/data-procedure.sql")
     public void crudPutProcedure() throws Exception {
 
@@ -123,7 +112,6 @@ public class ApiDocProcedure {
 
 
     @Test
-    @Order(4)
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:dataForTests/data-procedure.sql")
     public void crudGetProcedure() throws Exception {
 
@@ -146,7 +134,6 @@ public class ApiDocProcedure {
 
 
     @Test
-    @Order(5)
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:dataForTests/data-procedure.sql")
     public void crudPatchProcedure() throws Exception {
 

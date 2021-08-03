@@ -65,7 +65,6 @@ public class ApiDocEquipment {
 
 
     @Test
-    @Order(1)
     public void crudCreateEquipment() throws Exception {
         Map<String, Object> crud = new HashMap<>();
         crud.put("name", "Hospital beds.");
@@ -83,7 +82,6 @@ public class ApiDocEquipment {
 
 
     @Test
-    @Order(5)
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:dataForTests/data-equipment.sql")
     public void crudPatchExample() throws Exception {
 
@@ -101,7 +99,6 @@ public class ApiDocEquipment {
     }
 
     @Test
-    @Order(2)
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:dataForTests/data-equipment.sql")
     public void crudGetEquipment() throws Exception {
         Map<String, Object> crud = new HashMap<>();
@@ -117,7 +114,6 @@ public class ApiDocEquipment {
 
 
     @Test
-    @Order(3)
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:dataForTests/data-equipment.sql")
     public void crudPutEquipment() throws Exception {
 
@@ -138,7 +134,6 @@ public class ApiDocEquipment {
 
 
     @Test
-    @Order(5)
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:dataForTests/data-equipment.sql")
     public void crudDeleteEquipment() throws Exception {
         this.mockMvc.perform(delete("/equipment/{id}", 1))
