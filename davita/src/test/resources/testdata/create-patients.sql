@@ -1,3 +1,6 @@
+delete from patient;
+delete from userr;
+
 insert into userr (user_id, email, last_name, login, name, password, phone)
 values (1, 'test@email.com', 'test', 'test', 'test', 'pwd', '1234567980');
 
