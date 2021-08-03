@@ -57,4 +57,10 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
                     "    and patient_id = :patientId ")
     List<Order> findAllPatientOrders(@Param("patientId") Long patientId);
 
+    @Query(nativeQuery = true,
+            value = "select * from orderr " +
+                    "    where doctor_id is not null " +
+                    "    and doctor_id = :doctorId ")
+    List<Order> findAllDoctorOrders(@Param("doctorId") Long doctorId);
+
 }

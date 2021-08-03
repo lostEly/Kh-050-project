@@ -131,6 +131,15 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
+
+    @Override
+    public List<OrderDto> findAllDoctorOrders(Long doctorId) {
+        return orderRepository.findAllDoctorOrders(doctorId).stream()
+                .map(this::convertOrderToDto)
+                .collect(Collectors.toList());
+    }
+
+
     private Order convertDtoToOrder(OrderDto orderDto) {
         Order order = new Order();
         order.setOrderId(orderDto.getOrderId());

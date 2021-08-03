@@ -22,4 +22,5 @@ public interface OrderService {
     List<OrderDto> findAllFreeOrdersByProcedure(Long procedureId);
 
     List<OrderDto> findAllPatientOrders(Long patientId);
+    List<OrderDto>  findAllDoctorOrders(Long doctorId);
 }
