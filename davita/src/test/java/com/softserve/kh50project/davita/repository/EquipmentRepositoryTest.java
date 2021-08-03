@@ -1,6 +1,7 @@
 package com.softserve.kh50project.davita.repository;
 
 
+import com.softserve.kh50project.davita.dto.EquipmentDto;
 import com.softserve.kh50project.davita.model.Equipment;
 import com.softserve.kh50project.davita.service.impl.EquipmentServiceImpl;
 import org.junit.jupiter.api.*;
@@ -158,7 +159,7 @@ public class EquipmentRepositoryTest {
     @Order(9)
     @DisplayName("testGetPostById using URL")
     public void testGetPostById() {
-        Equipment equipment = restTemplate.getForObject(ROOT_URL + "/equipment/1", Equipment.class);
+        Equipment equipment = restTemplate.getForObject(ROOT_URL + "/equipment/17", Equipment.class);
         assertNotNull(equipment);
     }
 
@@ -171,9 +172,9 @@ public class EquipmentRepositoryTest {
     @DisplayName("testUpdatePost using URL")
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:dataForTests/data-equipment.sql")
     public void testUpdatePost() {
-        int id = 1;
+        int id = 17;
         Equipment post = restTemplate.getForObject(ROOT_URL + "/equipment/" + id, Equipment.class);
-        post.setName("This my updated post1 content");
+        post.setName("Updated Equipment");
         restTemplate.put(ROOT_URL + "/equipment/" + id, post);
         Equipment updatedPost = restTemplate.getForObject(ROOT_URL + "/equipment/" + id, Equipment.class);
         assertNotNull(updatedPost);
