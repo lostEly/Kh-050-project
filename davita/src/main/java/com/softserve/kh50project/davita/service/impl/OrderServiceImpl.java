@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import static java.util.Objects.nonNull;
+
 
 @Service
 @AllArgsConstructor
@@ -112,6 +114,28 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.findById(id)
                 .orElseThrow(ResourceNotFoundException::new);
         orderRepository.deleteById(id);
+    }
+
+    @Override
+    public List<OrderDto> findAllFreeOrdersByProcedure(Long procedureId) {
+        return orderRepository.findAllFreeOrdersByProcedure(procedureId).stream()
+                .map(this::convertOrderToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderDto> findAllPatientOrders(Long patientId) {
+        return orderRepository.findAllPatientOrders(patientId).stream()
+                .map(this::convertOrderToDto)
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
+    public List<OrderDto> findAllDoctorOrders(Long doctorId) {
+        return orderRepository.findAllDoctorOrders(doctorId).stream()
+                .map(this::convertOrderToDto)
+                .collect(Collectors.toList());
     }
 
 

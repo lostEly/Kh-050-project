@@ -11,8 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,6 +61,9 @@ public class DoctorServiceImpl implements DoctorService {
     public DoctorDto patch(Map<String, Object> fields, Long id) {
         DoctorDto doctorDto = readById(id);
         fields.forEach((k, v) -> {
+            if (Objects.equals(k, "dateOfBirthday")) {
+                v = LocalDate.parse((String) v, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            }
             Field field = ReflectionUtils.findField(DoctorDto.class, k);
             field.setAccessible(true);
             ReflectionUtils.setField(field, doctorDto, v);

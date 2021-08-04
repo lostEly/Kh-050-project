@@ -73,6 +73,24 @@ public class OrderController {
         return new ResponseEntity<>(ordersDto, HttpStatus.OK);
     }
 
+    @GetMapping("/free")
+    public ResponseEntity<List<OrderDto>> findAllFreeOrdersByProcedure(@RequestParam Long procedureId) {
+        List<OrderDto> ordersDto = orderService.findAllFreeOrdersByProcedure(procedureId);
+        return new ResponseEntity<>(ordersDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/appointments")
+    public ResponseEntity<List<OrderDto>> findAllPatientOrders(@RequestParam Long patientId) {
+        List<OrderDto> ordersDto = orderService.findAllPatientOrders(patientId);
+        return new ResponseEntity<>(ordersDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/doctor-appointments")
+    public ResponseEntity<List<OrderDto>> findAllDoctorOrders(@RequestParam Long doctorId) {
+        List<OrderDto> ordersDto = orderService.findAllDoctorOrders(doctorId);
+        return new ResponseEntity<>(ordersDto, HttpStatus.OK);
+    }
+
     /**
      * Creating new order
      *

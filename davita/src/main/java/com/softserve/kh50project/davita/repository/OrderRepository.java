@@ -7,6 +7,8 @@ import com.softserve.kh50project.davita.model.Procedure;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.Predicate;
@@ -40,5 +42,25 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
+
+    @Query(nativeQuery = true,
+            value = "select * from orderr " +
+                    " where procedure_id = :procedureId " +
+                    "    and doctor_id is not null " +
+                    "    and patient_id is null " +
+                    "    and start > now() ")
+    List<Order> findAllFreeOrdersByProcedure(@Param("procedureId") Long procedureId);
+
+    @Query(nativeQuery = true,
+            value = "select * from orderr " +
+                    "    where doctor_id is not null " +
+                    "    and patient_id = :patientId ")
+    List<Order> findAllPatientOrders(@Param("patientId") Long patientId);
+
+    @Query(nativeQuery = true,
+            value = "select * from orderr " +
+                    "    where doctor_id is not null " +
+                    "    and doctor_id = :doctorId ")
+    List<Order> findAllDoctorOrders(@Param("doctorId") Long doctorId);
 
 }

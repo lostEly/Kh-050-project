@@ -4,11 +4,7 @@ import com.softserve.kh50project.davita.dto.DoctorDto;
 import com.softserve.kh50project.davita.dto.OrderDto;
 import com.softserve.kh50project.davita.dto.PatientDto;
 import com.softserve.kh50project.davita.dto.ProcedureDto;
-import com.softserve.kh50project.davita.model.Doctor;
-import com.softserve.kh50project.davita.model.Patient;
-import com.softserve.kh50project.davita.model.Procedure;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -22,4 +18,9 @@ public interface OrderService {
     OrderDto patch(Map<String, Object> fields, Long id);
 
     void delete(Long id);
+
+    List<OrderDto> findAllFreeOrdersByProcedure(Long procedureId);
+
+    List<OrderDto> findAllPatientOrders(Long patientId);
+    List<OrderDto>  findAllDoctorOrders(Long doctorId);
 }

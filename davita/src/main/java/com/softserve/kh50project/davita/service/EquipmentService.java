@@ -1,20 +1,22 @@
 package com.softserve.kh50project.davita.service;
 
+import com.softserve.kh50project.davita.dto.EquipmentDto;
+import com.softserve.kh50project.davita.dto.ProcedureDto;
 import com.softserve.kh50project.davita.model.Equipment;
 
 import java.util.List;
 import java.util.Map;
 
 public interface EquipmentService {
-    Equipment readById(Long id);
+    EquipmentDto readById(Long id);
 
-    List<Equipment> read();
+    List<EquipmentDto> read(String name);
 
-    Equipment create(Equipment equipment);
+    EquipmentDto create(EquipmentDto equipment);
 
-    Equipment update(Equipment equipment, Long id);
+    EquipmentDto update(EquipmentDto equipment, Long id);
 
-    Equipment patch(Map<String, Object> fields, Long id);
+    EquipmentDto patch(Map<String, Object> fields, Long id);
 
     void delete(Long id);
 }
