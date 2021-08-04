@@ -1,6 +1,7 @@
 package com.softserve.kh50project.davita.model;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -10,7 +11,9 @@ import java.util.List;
 import java.util.Set;
 
 @Data
-@Entity(name = "role")
+@Entity(name = "Role")
+@Table(name = "role")
+@ToString
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,8 +29,8 @@ public class Role {
 
     @ManyToMany(cascade = {
             CascadeType.PERSIST,
-            CascadeType.MERGE
-    })
+            CascadeType.MERGE},
+            fetch = FetchType.EAGER)
     @JoinTable(name = "role_permission",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id")
