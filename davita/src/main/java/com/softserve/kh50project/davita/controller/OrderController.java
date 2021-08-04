@@ -6,13 +6,15 @@ import com.softserve.kh50project.davita.service.OrderService;
 import com.softserve.kh50project.davita.service.PatientService;
 import com.softserve.kh50project.davita.service.ProcedureService;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import javax.ws.rs.QueryParam;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,22 +26,21 @@ public class OrderController {
     @Qualifier(value = "OrderServiceImpl")
     private final OrderService orderService;
 
+    @Qualifier(value = "ProcedureServiceImpl")
+    private final ProcedureService procedureService;
+
     @Qualifier(value = "DoctorServiceImpl")
     private final DoctorService doctorService;
 
     @Qualifier(value = "PatientServiceImpl")
     private final PatientService patientService;
 
-    @Qualifier(value = "ProcedureServiceImpl")
-    private final ProcedureService procedureService;
-
-    private final ModelMapper modelMapper;
 
     /**
      * Getting order by id
      *
-     * @param id Long orderDto.orderId
-     * @return The orderDto by id
+     * @param id Long
+     * @return The OrderDto by id
      */
     @GetMapping(value = "/{id}")
     public ResponseEntity<OrderDto> readById(@PathVariable Long id) {
@@ -50,17 +51,24 @@ public class OrderController {
     /**
      * Getting orders by param
      *
-     * @param orderDto Map(String,Object)={orderId, start, finish, cost, procedureId, doctorId, patienId}
-     * @return The list of orders
+     * @param start         String
+     * @param finish        String
+     * @param procedureId   Long
+     * @param doctorId      Long
+     * @param patientId     Long
+     * @return The List<OrderDto> of orders. If all fields == null -> return all Orders
      */
     @GetMapping
-    public ResponseEntity<List<OrderDto>> read(@RequestBody OrderDto orderDto) {
+//    public ResponseEntity<List<OrderDto>> read(@RequestBody Map<String, Object> fields) {
+    public ResponseEntity<List<OrderDto>> read(@QueryParam("start") String start, @QueryParam("finish") String finish,
+                                               @QueryParam("procedureId") Long procedureId, @QueryParam("doctorId") Long doctorId,
+                                               @QueryParam("patientId") Long patientId) {
         List<OrderDto> ordersDto = orderService.read(
-                LocalDateTime.parse(orderDto.getStart()),
-                LocalDateTime.parse(orderDto.getFinish()),
-                procedureService.readById(orderDto.getOrderId()),
-                doctorService.readById(orderDto.getDoctorId()),
-                patientService.readById(orderDto.getPatientId())
+                (start != null) ? LocalDateTime.parse(start) : null,
+                (finish != null) ? LocalDateTime.parse(finish) : null,
+                (procedureId != null) ? procedureService.readById(procedureId) : null,
+                (doctorId != null) ? doctorService.readById(doctorId) : null,
+                (patientId != null) ? patientService.readById(patientId) : null
         );
         return new ResponseEntity<>(ordersDto, HttpStatus.OK);
     }
@@ -84,10 +92,10 @@ public class OrderController {
     }
 
     /**
-     * Creating a new order
+     * Creating new order
      *
-     * @param orderDto
-     * @return The new orderDto
+     * @param orderDto OrderDto
+     * @return The new OrderDto
      */
     @PostMapping
     public ResponseEntity<OrderDto> create(@RequestBody OrderDto orderDto) {
@@ -98,8 +106,8 @@ public class OrderController {
     /**
      * Updating the order
      *
-     * @param orderDto which should be update
-     * @param id orderDto.orderId
+     * @param orderDto OrderDto
+     * @param id       Long
      * @return The updated order
      */
     @PutMapping(value = "/{id}")
@@ -111,7 +119,8 @@ public class OrderController {
     /**
      * Partial updating the order
      *
-     * @param fields is map of orderOdt Map(String,Object)={orderId, start, finish, cost, procedureId, doctorId, patienId}
+     * @param fields Map<String, Object>
+     * @param id     Long
      * @return partly updated order
      */
     @PatchMapping(value = "/{id}")
@@ -123,12 +132,30 @@ public class OrderController {
     /**
      * Deleting the order
      *
-     * @param id order id
+     * @param id Long
      * @return ResponseEntity with status OK
      */
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         orderService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * Getting orders without doctor from start to finish
+     *
+     * @param idList   List<Long>
+     * @param doctorId Long
+     * @return The List<OrderDto> of orders
+     */
+    @PatchMapping(value = "/bookOrdersForDoctor/{doctorId}")
+    public ResponseEntity<List<OrderDto>> bookOrders(@RequestBody List<Long> idList, @PathVariable Long doctorId) {
+        List<OrderDto> ordersDto = new ArrayList<>();
+        Map<String, Object> patchFields = new HashMap<>();
+        patchFields.put("doctorId", doctorId);
+        for (Long idOrder : idList) {
+            ordersDto.add(orderService.patch(patchFields, idOrder));
+        }
+        return new ResponseEntity<>(ordersDto, HttpStatus.OK);
     }
 }
