@@ -2,10 +2,7 @@ package com.softserve.kh50project.davita.controller;
 
 import com.softserve.kh50project.davita.DavitaApplication;
 import com.softserve.kh50project.davita.dto.DoctorDto;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -20,7 +17,6 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestPropertySource("classpath:application-test.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = DavitaApplication.class)
@@ -33,11 +29,11 @@ class DoctorControllerTest {
 
     private final TestRestTemplate restTemplate = new TestRestTemplate();
 
-    @Order(1)
+    @Sql(scripts = "classpath:testdata/create-doctors.sql")
     @Test
     void getDoctorByIdWith404() {
         ResponseEntity<DoctorDto> response = restTemplate.exchange(
-                LOCALHOST + port + CONTEXT_PATH + "/doctors/1",
+                LOCALHOST + port + CONTEXT_PATH + "/doctors/45",
                 HttpMethod.GET,
                 null,
                 DoctorDto.class
@@ -46,7 +42,6 @@ class DoctorControllerTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
-    @Order(2)
     @Sql(scripts = "classpath:testdata/create-doctors.sql")
     @Test
     void getDoctorById() {
@@ -61,7 +56,7 @@ class DoctorControllerTest {
         assertEquals(1, response.getBody().getUserId());
     }
 
-    @Order(3)
+    @Sql(scripts = "classpath:testdata/create-doctors.sql")
     @Test
     void getDoctors() {
         ResponseEntity<List<DoctorDto>> response =
@@ -77,7 +72,7 @@ class DoctorControllerTest {
         assertEquals(3, response.getBody().size());
     }
 
-    @Order(3)
+    @Sql(scripts = "classpath:testdata/create-doctors.sql")
     @Test
     void getDoctorsBySpecialization() {
         ResponseEntity<List<DoctorDto>> response =
@@ -93,7 +88,7 @@ class DoctorControllerTest {
         assertEquals(2, response.getBody().size());
     }
 
-    @Order(4)
+    @Sql(scripts = "classpath:testdata/create-doctors.sql")
     @Test
     void createDoctor() {
         HttpHeaders headers = new HttpHeaders();
@@ -124,7 +119,7 @@ class DoctorControllerTest {
         assertNotNull(response.getBody().getUserId());
     }
 
-    @Order(5)
+    @Sql(scripts = "classpath:testdata/create-doctors.sql")
     @Test
     void updateDoctor() {
         HttpHeaders headers = new HttpHeaders();
@@ -154,7 +149,7 @@ class DoctorControllerTest {
         assertNull(response.getBody().getEmail());
     }
 
-    @Order(6)
+    @Sql(scripts = "classpath:testdata/create-doctors.sql")
     @Test
     void updateNotExistingDoctor() {
         HttpHeaders headers = new HttpHeaders();
@@ -173,7 +168,7 @@ class DoctorControllerTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
-    @Order(7)
+    @Sql(scripts = "classpath:testdata/create-doctors.sql")
     @Test
     void patchDoctor() {
         HttpHeaders headers = new HttpHeaders();
@@ -195,7 +190,7 @@ class DoctorControllerTest {
         assertEquals("lastename-upd", response.getBody().getLastName());
     }
 
-    @Order(8)
+    @Sql(scripts = "classpath:testdata/create-doctors.sql")
     @Test
     void patchNotExistingDoctor() {
         HttpHeaders headers = new HttpHeaders();
@@ -214,7 +209,7 @@ class DoctorControllerTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
-    @Order(9)
+    @Sql(scripts = "classpath:testdata/create-doctors.sql")
     @Test
     void deleteDoctor() {
         ResponseEntity<?> response =
@@ -229,7 +224,7 @@ class DoctorControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
-    @Order(10)
+    @Sql(scripts = "classpath:testdata/create-doctors.sql")
     @Test
     void deleteNotExistingDoctor() {
         ResponseEntity<?> response =

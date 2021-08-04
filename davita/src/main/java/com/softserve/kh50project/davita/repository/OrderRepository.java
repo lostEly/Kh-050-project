@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.Predicate;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,19 +44,9 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
         };
     }
 
-    @Query(nativeQuery = true,
-            value = "select * from orderr " +
-                    " where procedure_id = :procedureId " +
-                    "    and doctor_id is not null " +
-                    "    and patient_id is null " +
-                    "    and start > now() ")
-    List<Order> findAllFreeOrdersByProcedure(@Param("procedureId") Long procedureId);
+    List<Order> findAllByDoctorUserIdIsNotNullAndPatientUserIdIsNullAndProcedureProcedureIdAndStartGreaterThan(Long procedureId, LocalDateTime start);
 
-    @Query(nativeQuery = true,
-            value = "select * from orderr " +
-                    "    where doctor_id is not null " +
-                    "    and patient_id = :patientId ")
-    List<Order> findAllPatientOrders(@Param("patientId") Long patientId);
+    List<Order> findAllByDoctorUserIdIsNotNullAndPatientUserId(Long userId);
 
     @Query(nativeQuery = true,
             value = "select * from orderr " +

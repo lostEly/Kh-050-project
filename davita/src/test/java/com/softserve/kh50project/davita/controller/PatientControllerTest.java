@@ -22,7 +22,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestPropertySource("classpath:application-test.properties")
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -34,14 +33,13 @@ class PatientControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Order(1)
+    @Sql(scripts = "classpath:testdata/create-patients.sql")
     @Test
     void getPatientByIdWith404() throws Exception {
-        mockMvc.perform(get("/patients/1"))
+        mockMvc.perform(get("/patients/34"))
                 .andExpect(status().isNotFound());
     }
 
-    @Order(2)
     @Sql(scripts = "classpath:testdata/create-patients.sql")
     @Test
     void getPatientById() throws Exception {
@@ -50,7 +48,7 @@ class PatientControllerTest {
                 .andExpect(jsonPath("$.userId").value(1));
     }
 
-    @Order(3)
+    @Sql(scripts = "classpath:testdata/create-patients.sql")
     @Test
     void getPatients() throws Exception {
         mockMvc.perform(get("/patients"))
@@ -62,7 +60,7 @@ class PatientControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Order(3)
+    @Sql(scripts = "classpath:testdata/create-patients.sql")
     @Test
     void getPatientsByName() throws Exception {
         mockMvc.perform(get("/patients?lastName=test11"))
@@ -73,7 +71,7 @@ class PatientControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Order(4)
+    @Sql(scripts = "classpath:testdata/create-patients.sql")
     @Test
     void createPatient() throws Exception {
         PatientDto patientDto = new PatientDto();
@@ -93,7 +91,7 @@ class PatientControllerTest {
                 .andExpect(jsonPath("$.userId", notNullValue()));
     }
 
-    @Order(5)
+    @Sql(scripts = "classpath:testdata/create-patients.sql")
     @Test
     void updatePatient() throws Exception {
         PatientDto patientDto = new PatientDto();
@@ -112,7 +110,7 @@ class PatientControllerTest {
                 .andExpect(jsonPath("$.email", nullValue()));
     }
 
-    @Order(6)
+    @Sql(scripts = "classpath:testdata/create-patients.sql")
     @Test
     void updateNotExistingPatient() throws Exception {
         mockMvc.perform(put("/patients/99")
@@ -121,19 +119,19 @@ class PatientControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    @Order(7)
+    @Sql(scripts = "classpath:testdata/create-patients.sql")
     @Test
     void patchPatient() throws Exception {
-        Map<String, Object> fields = Map.of("lastName", "lastename-upd");
+        Map<String, Object> fields = Map.of("lastName", "lastname-upd");
 
         mockMvc.perform(patch("/patients/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(fields)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.lastName").value("lastename-upd"));
+                .andExpect(jsonPath("$.lastName").value("lastname-upd"));
     }
 
-    @Order(8)
+    @Sql(scripts = "classpath:testdata/create-patients.sql")
     @Test
     void patchNotExistingPatient() throws Exception {
         mockMvc.perform(patch("/patients/99")
@@ -142,14 +140,14 @@ class PatientControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    @Order(9)
+    @Sql(scripts = "classpath:testdata/create-patients.sql")
     @Test
     void deletePatient() throws Exception {
         mockMvc.perform(delete("/patients/1"))
                 .andExpect(status().isOk());
     }
 
-    @Order(10)
+    @Sql(scripts = "classpath:testdata/create-patients.sql")
     @Test
     void deleteNotExistingPatient() throws Exception {
         mockMvc.perform(delete("/patients/99"))
