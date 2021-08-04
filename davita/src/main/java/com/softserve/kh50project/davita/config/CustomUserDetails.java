@@ -1,11 +1,13 @@
 package com.softserve.kh50project.davita.config;
 
+import com.softserve.kh50project.davita.model.Role;
 import com.softserve.kh50project.davita.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class CustomUserDetails implements UserDetails {
@@ -19,7 +21,8 @@ public class CustomUserDetails implements UserDetails {
         CustomUserDetails c = new CustomUserDetails();
         c.login = user.getLogin();
         c.password = user.getPassword();
-        c.grantedAuthorities = user.getRoles().stream()
+        List<Role> rolesList = user.getRoles();
+        c.grantedAuthorities = rolesList.stream()
                 .map(el -> new SimpleGrantedAuthority(el.getName()))
                 .collect(Collectors.toList());
         return c;
