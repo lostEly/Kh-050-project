@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import javax.ws.rs.QueryParam;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -50,17 +51,24 @@ public class OrderController {
     /**
      * Getting orders by param
      *
-     * @param fields Map<String, Object> (start,finish,procedureId,doctorId,patientId)
+     * @param start         String
+     * @param finish        String
+     * @param procedureId   Long
+     * @param doctorId      Long
+     * @param patientId     Long
      * @return The List<OrderDto> of orders. If all fields == null -> return all Orders
      */
     @GetMapping
-    public ResponseEntity<List<OrderDto>> read(@RequestBody Map<String, Object> fields) {
+//    public ResponseEntity<List<OrderDto>> read(@RequestBody Map<String, Object> fields) {
+    public ResponseEntity<List<OrderDto>> read(@QueryParam("start") String start, @QueryParam("finish") String finish,
+                                               @QueryParam("procedureId") Long procedureId, @QueryParam("doctorId") Long doctorId,
+                                               @QueryParam("patientId") Long patientId) {
         List<OrderDto> ordersDto = orderService.read(
-                (fields.get("start") != null) ? LocalDateTime.parse((String) fields.get("start")) : null,
-                (fields.get("finish") != null) ? LocalDateTime.parse((String) fields.get("finish")) : null,
-                (fields.get("procedureId") != null) ? procedureService.readById(Long.parseLong(fields.get("procedureId").toString())) : null,
-                (fields.get("doctorId") != null) ? doctorService.readById(Long.parseLong(fields.get("doctorId").toString())) : null,
-                (fields.get("patientId") != null) ? patientService.readById(Long.parseLong(fields.get("patientId").toString())) : null
+                (start != null) ? LocalDateTime.parse(start) : null,
+                (finish != null) ? LocalDateTime.parse(finish) : null,
+                (procedureId != null) ? procedureService.readById(procedureId) : null,
+                (doctorId != null) ? doctorService.readById(doctorId) : null,
+                (patientId != null) ? patientService.readById(patientId) : null
         );
         return new ResponseEntity<>(ordersDto, HttpStatus.OK);
     }

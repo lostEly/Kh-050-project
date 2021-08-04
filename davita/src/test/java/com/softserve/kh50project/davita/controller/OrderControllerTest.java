@@ -2,18 +2,23 @@ package com.softserve.kh50project.davita.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.kh50project.davita.dto.OrderDto;
-import com.softserve.kh50project.davita.dto.PatientDto;
+import com.softserve.kh50project.davita.model.Doctor;
+import com.softserve.kh50project.davita.model.Order;
+import com.softserve.kh50project.davita.model.Patient;
+import com.softserve.kh50project.davita.model.Procedure;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 import static org.hamcrest.Matchers.*;
@@ -21,10 +26,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestPropertySource("classpath:application-test-order.properties")
+//@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+//@TestPropertySource("classpath:application-test-order.properties")
 @AutoConfigureMockMvc
 @SpringBootTest
+
+@DataJpaTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestPropertySource(locations = "classpath:application-test-order.properties")
 class OrderControllerTest {
 
     @Autowired
@@ -33,16 +42,74 @@ class OrderControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private TestEntityManager entityManager;
 
-    @Order(1)
+    Doctor createDoctor(int pos) {
+        Doctor doctor = new Doctor();
+        doctor.setLogin("Login" + pos);
+        doctor.setPassword("Password" + pos);
+        doctor.setName("DoctorName" + pos);
+        doctor.setLastName("DoctorLastName" + pos);
+        doctor.setPhone("050505050" + pos);
+        doctor.setEmail("doctor" + pos + "@gmail.com");
+        doctor.setSpecialization("Specialization" + pos);
+        doctor.setCertificateNumber("0000000000" + pos);
+        return entityManager.persistAndFlush(doctor);
+    }
+
+    Patient createPatient(int pos) {
+        Patient patient = new Patient();
+        patient.setLogin("Login" + pos);
+        patient.setPassword("Password" + pos);
+        patient.setName("patientName" + pos);
+        patient.setLastName("patientLastName" + pos);
+        patient.setPhone("050999999" + pos);
+        patient.setEmail("patient" + pos + "@gmail.com");
+        patient.setInsuranceNumber("111111110" + pos);
+        return entityManager.persistAndFlush(patient);
+    }
+
+    Procedure createProcedure(int pos) {
+        Procedure procedure = new Procedure();
+        procedure.setName("procedureName" + pos);
+        procedure.setCost(100.0 * (1 + pos));
+        procedure.setDuration(LocalTime.of(pos, pos * 5, pos * 5));
+        return entityManager.persistAndFlush(procedure);
+    }
+
+    void ordersInit(int count) {
+    }
+
+
+    @BeforeEach
+//    @Sql(scripts = "classpath:testdata/create-orders.sql")
+    void initTables(){
+        for (int i = 0; i < 5; i++) {
+            Order order = new Order();
+            order.setStart(LocalDateTime.parse("2021-07-0" + (i + 1) + "T10:15:00"));
+            order.setFinish(LocalDateTime.parse("2021-07-0" + (i + 1) + "T10:30:00"));
+            order.setCost(100.0 * (i + 1));
+
+            order.setDoctor(createDoctor(i));
+            order.setPatient(createPatient(i));
+            order.setProcedure(createProcedure(i));
+            entityManager.persistAndFlush(order);
+        }
+    }
+
+    @AfterEach
+//    @Sql(scripts = "classpath:testdata/delete-orders.sql")
+    void dropTable(){
+        entityManager.clear();
+    }
+
     @Test
     void getOrderById404() throws Exception {
         mockMvc.perform(get("/orders/1001"))
                 .andExpect(status().isNotFound());
     }
 
-    @Order(2)
-    @Sql(scripts = "classpath:testdata/create-orders.sql")
     @Test
     void getOrderById() throws Exception {
         mockMvc.perform(get("/orders/1"))
@@ -50,10 +117,8 @@ class OrderControllerTest {
                 .andExpect(jsonPath("$.orderId").value(1));
     }
 
-    @Order(3)
     @Test
     void getOrdersAll() throws Exception {
-
         mockMvc.perform(get("/orders")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of())))
@@ -65,7 +130,6 @@ class OrderControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Order(4)
     @Test
     void createNewOrder() throws Exception {
         OrderDto orderDto = new OrderDto();
@@ -80,7 +144,6 @@ class OrderControllerTest {
                 .andExpect(jsonPath("$.orderId", notNullValue()));
     }
 
-    @Order(5)
     @Test
     void updateOrder() throws Exception {
         OrderDto orderDto = new OrderDto();
@@ -98,7 +161,6 @@ class OrderControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Order(6)
     @Test
     void updateNotExistingPatient() throws Exception {
         OrderDto orderDto = new OrderDto();
@@ -112,7 +174,6 @@ class OrderControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    @Order(7)
     @Test
     void patchOrder() throws Exception {
         Map<String, Object> fields = Map.of("cost", 99999.0);
@@ -125,7 +186,6 @@ class OrderControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Order(8)
     @Test
     void patchNotExistingOrder() throws Exception {
         mockMvc.perform(patch("/orders/99")
@@ -134,14 +194,12 @@ class OrderControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    @Order(9)
     @Test
     void deleteOrder() throws Exception {
         mockMvc.perform(delete("/orders/1"))
                 .andExpect(status().isOk());
     }
 
-    @Order(10)
     @Test
     void deleteNotExistingPatient() throws Exception {
         mockMvc.perform(delete("/orders/9999"))
@@ -149,7 +207,6 @@ class OrderControllerTest {
                 .andReturn();
     }
 
-    @Order(11)
     @Test
     void getEmptyDoctor() throws Exception {
         Map<String, Object> fieldsMap = new HashMap();
@@ -168,7 +225,6 @@ class OrderControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Order(12)
     @Test
     void bookOrders() throws Exception {
         Long[] idArr = {5L, 2L, 3L, 4L};
@@ -184,7 +240,6 @@ class OrderControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Order(12)
     @Test
     void doctorNextDayCalendar() throws Exception {
         String startStr = "2021-07-02T00:00:01";
