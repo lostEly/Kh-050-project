@@ -8,11 +8,11 @@ public class TestSecurityController {
 
     @GetMapping("/admin/get")
     public String getAdmin() {
-        return "Hi admin";
+        return "Hi ADMIN! You have access!";
     }
 
     @GetMapping("/user/get")
     public String getUser() {
-        return "Hi user";
+        return "Hi USER!  You have access!";
     }
 }
