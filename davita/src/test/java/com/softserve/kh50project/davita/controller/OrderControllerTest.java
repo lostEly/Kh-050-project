@@ -1,39 +1,49 @@
 package com.softserve.kh50project.davita.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.kh50project.davita.dto.OrderDto;
+import com.softserve.kh50project.davita.dto.ProcedureDto;
 import com.softserve.kh50project.davita.model.Doctor;
 import com.softserve.kh50project.davita.model.Order;
 import com.softserve.kh50project.davita.model.Patient;
 import com.softserve.kh50project.davita.model.Procedure;
+import com.softserve.kh50project.davita.service.impl.OrderServiceImpl;
+import com.softserve.kh50project.davita.service.impl.ProcedureServiceImpl;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 //@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 //@TestPropertySource("classpath:application-test-order.properties")
-@AutoConfigureMockMvc
-@SpringBootTest
+//@AutoConfigureMockMvc
+//@SpringBootTest
+//
+//@DataJpaTest
 
-@DataJpaTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestPropertySource(locations = "classpath:application-test-order.properties")
+@WebMvcTest(OrderController.class)
+@TestPropertySource("/application-test.properties")
 class OrderControllerTest {
 
     @Autowired
@@ -42,72 +52,25 @@ class OrderControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private TestEntityManager entityManager;
-
-    Doctor createDoctor(int pos) {
-        Doctor doctor = new Doctor();
-        doctor.setLogin("Login" + pos);
-        doctor.setPassword("Password" + pos);
-        doctor.setName("DoctorName" + pos);
-        doctor.setLastName("DoctorLastName" + pos);
-        doctor.setPhone("050505050" + pos);
-        doctor.setEmail("doctor" + pos + "@gmail.com");
-        doctor.setSpecialization("Specialization" + pos);
-        doctor.setCertificateNumber("0000000000" + pos);
-        return entityManager.persistAndFlush(doctor);
-    }
-
-    Patient createPatient(int pos) {
-        Patient patient = new Patient();
-        patient.setLogin("Login" + pos);
-        patient.setPassword("Password" + pos);
-        patient.setName("patientName" + pos);
-        patient.setLastName("patientLastName" + pos);
-        patient.setPhone("050999999" + pos);
-        patient.setEmail("patient" + pos + "@gmail.com");
-        patient.setInsuranceNumber("111111110" + pos);
-        return entityManager.persistAndFlush(patient);
-    }
-
-    Procedure createProcedure(int pos) {
-        Procedure procedure = new Procedure();
-        procedure.setName("procedureName" + pos);
-        procedure.setCost(100.0 * (1 + pos));
-        procedure.setDuration(LocalTime.of(pos, pos * 5, pos * 5));
-        return entityManager.persistAndFlush(procedure);
-    }
-
-    void ordersInit(int count) {
-    }
-
+//    @MockBean
+//    private OrderServiceImpl orderService;
 
     @BeforeEach
-//    @Sql(scripts = "classpath:testdata/create-orders.sql")
-    void initTables(){
-        for (int i = 0; i < 5; i++) {
-            Order order = new Order();
-            order.setStart(LocalDateTime.parse("2021-07-0" + (i + 1) + "T10:15:00"));
-            order.setFinish(LocalDateTime.parse("2021-07-0" + (i + 1) + "T10:30:00"));
-            order.setCost(100.0 * (i + 1));
-
-            order.setDoctor(createDoctor(i));
-            order.setPatient(createPatient(i));
-            order.setProcedure(createProcedure(i));
-            entityManager.persistAndFlush(order);
-        }
-    }
-
-    @AfterEach
-//    @Sql(scripts = "classpath:testdata/delete-orders.sql")
-    void dropTable(){
-        entityManager.clear();
-    }
+    @Sql(scripts = "classpath:testdata/create-orders.sql")
+    void initTables(){ }
 
     @Test
     void getOrderById404() throws Exception {
-        mockMvc.perform(get("/orders/1001"))
-                .andExpect(status().isNotFound());
+//        mockMvc.perform(get("/orders/1001"))
+//                .andExpect(status().isNotFound());
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8080/orders/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andReturn();
+        ObjectMapper mapper = new ObjectMapper();
+        OrderDto actual = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
+        assertNotNull(actual);
+        assertEquals(1, actual.getOrderId());
     }
 
     @Test

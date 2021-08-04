@@ -5,12 +5,12 @@ import com.softserve.kh50project.davita.service.DoctorService;
 import com.softserve.kh50project.davita.service.OrderService;
 import com.softserve.kh50project.davita.service.PatientService;
 import com.softserve.kh50project.davita.service.ProcedureService;
+import com.softserve.kh50project.davita.service.impl.OrderServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import javax.ws.rs.QueryParam;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,16 +35,26 @@ public class OrderController {
     @Qualifier(value = "PatientServiceImpl")
     private final PatientService patientService;
 
+    /**
+     * Getting All orders
+     *
+     * @return The List<OrderDto> of all orders
+     */
+    @GetMapping
+    public ResponseEntity<List<OrderDto>> readAll() {
+        List<OrderDto> ordersDto = orderService.findAll();
+        return new ResponseEntity<>(ordersDto, HttpStatus.OK);
+    }
 
     /**
      * Getting order by id
      *
-     * @param id Long
+     * @param orderId Long
      * @return The OrderDto by id
      */
     @GetMapping(value = "/{id}")
-    public ResponseEntity<OrderDto> readById(@PathVariable Long id) {
-        OrderDto findOrderDto = orderService.readById(id);
+    public ResponseEntity<OrderDto> readById(@PathVariable Long orderId) {
+        OrderDto findOrderDto = orderService.findById(orderId);
         return new ResponseEntity<>(findOrderDto, HttpStatus.OK);
     }
 
@@ -58,36 +68,79 @@ public class OrderController {
      * @param patientId     Long
      * @return The List<OrderDto> of orders. If all fields == null -> return all Orders
      */
-    @GetMapping
-//    public ResponseEntity<List<OrderDto>> read(@RequestBody Map<String, Object> fields) {
-    public ResponseEntity<List<OrderDto>> read(@QueryParam("start") String start, @QueryParam("finish") String finish,
-                                               @QueryParam("procedureId") Long procedureId, @QueryParam("doctorId") Long doctorId,
-                                               @QueryParam("patientId") Long patientId) {
-        List<OrderDto> ordersDto = orderService.read(
-                (start != null) ? LocalDateTime.parse(start) : null,
-                (finish != null) ? LocalDateTime.parse(finish) : null,
-                (procedureId != null) ? procedureService.readById(procedureId) : null,
-                (doctorId != null) ? doctorService.readById(doctorId) : null,
-                (patientId != null) ? patientService.readById(patientId) : null
+    @GetMapping("/filter")
+    public ResponseEntity<List<OrderDto>> read(@RequestParam(defaultValue = "") String start,
+                                               @RequestParam(defaultValue = "") String finish,
+                                               @RequestParam(defaultValue = "0") Long procedureId,
+                                               @RequestParam(defaultValue = "0") Long doctorId,
+                                               @RequestParam(defaultValue = "0") Long patientId) {
+        List<OrderDto> ordersDto = orderService.find(
+                (start.length()>0) ? LocalDateTime.parse(start) : null,
+                (finish.length()>0) ? LocalDateTime.parse(finish) : null,
+                (procedureId>0) ? procedureService.readById(procedureId) : null,
+                (doctorId>0) ? doctorService.readById(doctorId) : null,
+                (patientId>0) ? patientService.readById(patientId) : null
         );
         return new ResponseEntity<>(ordersDto, HttpStatus.OK);
     }
 
+    /**
+     * Getting free order to patient
+     *
+     * @param procedureId Long
+     * @return The OrderDto by id
+     */
     @GetMapping("/free")
-    public ResponseEntity<List<OrderDto>> findAllFreeOrdersByProcedure(@RequestParam Long procedureId) {
-        List<OrderDto> ordersDto = orderService.findAllFreeOrdersByProcedure(procedureId);
+    public ResponseEntity<List<OrderDto>> findAllFreePatientOrders(@RequestParam Long procedureId) {
+        List<OrderDto> ordersDto = orderService.findAllFreeOrdersForPatient(procedureId);
         return new ResponseEntity<>(ordersDto, HttpStatus.OK);
     }
 
+   /**
+     * Getting free order to doctor
+     *
+     * @param procedureId Long
+     * @return The OrderDto by id
+     */
+    @GetMapping("/doctor-free")
+    public ResponseEntity<List<OrderDto>> findAllFreeDoctorOrders(@RequestParam Long procedureId) {
+        List<OrderDto> ordersDto = orderService.findAllFreeOrdersForDoctor(procedureId);
+        return new ResponseEntity<>(ordersDto, HttpStatus.OK);
+    }
+
+    /**
+     * Getting all patient's orders
+     *
+     * @param patientId Long
+     * @return The OrderDto by id
+     */
     @GetMapping("/appointments")
     public ResponseEntity<List<OrderDto>> findAllPatientOrders(@RequestParam Long patientId) {
         List<OrderDto> ordersDto = orderService.findAllPatientOrders(patientId);
         return new ResponseEntity<>(ordersDto, HttpStatus.OK);
     }
 
+    /**
+     * Getting all doctor's orders
+     *
+     * @param doctorId Long
+     * @return The OrderDto by id
+     */
     @GetMapping("/doctor-appointments")
     public ResponseEntity<List<OrderDto>> findAllDoctorOrders(@RequestParam Long doctorId) {
         List<OrderDto> ordersDto = orderService.findAllDoctorOrders(doctorId);
+        return new ResponseEntity<>(ordersDto, HttpStatus.OK);
+    }
+
+    /**
+     * Getting all doctor's orders
+     *
+     * @param doctorId Long
+     * @return The OrderDto by id
+     */
+    @GetMapping("/doctor-calendar")
+    public ResponseEntity<List<OrderDto>> findAllDoctorCalendar(@RequestParam Long doctorId) {
+        List<OrderDto> ordersDto = orderService.findDoctorCalendar(doctorId);
         return new ResponseEntity<>(ordersDto, HttpStatus.OK);
     }
 
@@ -130,18 +183,6 @@ public class OrderController {
     }
 
     /**
-     * Deleting the order
-     *
-     * @param id Long
-     * @return ResponseEntity with status OK
-     */
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        orderService.delete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    /**
      * Getting orders without doctor from start to finish
      *
      * @param idList   List<Long>
@@ -157,5 +198,17 @@ public class OrderController {
             ordersDto.add(orderService.patch(patchFields, idOrder));
         }
         return new ResponseEntity<>(ordersDto, HttpStatus.OK);
+    }
+
+    /**
+     * Deleting the order
+     *
+     * @param id Long
+     * @return ResponseEntity with status OK
+     */
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        orderService.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
