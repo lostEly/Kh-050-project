@@ -33,10 +33,10 @@ public class AuthController {
         u.setPassword(registrationRequest.getPassword());
         u.setLogin(registrationRequest.getLogin());
         userService.saveUser(u);
-        return "OK";
+        return "You are successfully registered!";
     }
 
-    @PostMapping("/auth")      //signin
+    @PostMapping("/authorize")      //signin
     public AuthResponse auth(@RequestBody AuthRequest request) {
         User user = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
         String token = jwtProvider.generateToken(user.getLogin());
