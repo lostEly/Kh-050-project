@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import javax.ws.rs.QueryParam;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -51,18 +50,17 @@ public class OrderController {
     /**
      * Getting orders by param
      *
-     * @param start         String
-     * @param finish        String
-     * @param procedureId   Long
-     * @param doctorId      Long
-     * @param patientId     Long
+     * @param start       String
+     * @param finish      String
+     * @param procedureId Long
+     * @param doctorId    Long
+     * @param patientId   Long
      * @return The List<OrderDto> of orders. If all fields == null -> return all Orders
      */
     @GetMapping
-//    public ResponseEntity<List<OrderDto>> read(@RequestBody Map<String, Object> fields) {
-    public ResponseEntity<List<OrderDto>> read(@QueryParam("start") String start, @QueryParam("finish") String finish,
-                                               @QueryParam("procedureId") Long procedureId, @QueryParam("doctorId") Long doctorId,
-                                               @QueryParam("patientId") Long patientId) {
+    public ResponseEntity<List<OrderDto>> read(@RequestParam("start") String start, @RequestParam("finish") String finish,
+                                               @RequestParam("procedureId") Long procedureId, @RequestParam("doctorId") Long doctorId,
+                                               @RequestParam("patientId") Long patientId) {
         List<OrderDto> ordersDto = orderService.read(
                 (start != null) ? LocalDateTime.parse(start) : null,
                 (finish != null) ? LocalDateTime.parse(finish) : null,
