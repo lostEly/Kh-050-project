@@ -43,13 +43,6 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
         };
     }
 
-    @Query(nativeQuery = true,
-            value = "select * from orderr " +
-                    "    where doctor_id is not null " +
-                    "    and patient_id is null " +
-                    "    and start >= :startDate " +
-                    "    and procedure_id = :procedureId ")
-    List<Order> findAllFreeOrdersForPatient(@Param("procedureId")Long procedureId, @Param("startDate") LocalDateTime start);
 
     @Query(nativeQuery = true,
             value = "select * from orderr " +
@@ -61,7 +54,7 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
     @Query(nativeQuery = true,
             value = "select * from orderr " +
                     "    where doctor_id = :doctorId " +
-                    "    and start >= :startDate "+
+                    "    and start >= :startDate " +
                     "    and finish <= :finishDate ")
     List<Order> findDoctorCalendar(@Param("doctorId") Long doctorId, @Param("startDate") LocalDateTime startDate, @Param("finishDate") LocalDateTime finishDate);
 
@@ -71,10 +64,22 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
                     "    and doctor_id = :doctorId ")
     List<Order> findAllDoctorOrders(@Param("doctorId") Long doctorId);
 
-    @Query(nativeQuery = true,
-            value = "select * from orderr " +
-                    "    where patient_id is not null " +
-                    "    and patient_id = :patientId ")
-    List<Order> findAllPatientOrders(@Param("patientId") Long patientId);
+//    @Query(nativeQuery = true,
+//            value = "select * from orderr " +
+//                    "    where doctor_id is not null " +
+//                    "    and patient_id is null " +
+//                    "    and start >= :startDate " +
+//                    "    and procedure_id = :procedureId ")
+//    List<Order> findAllFreeOrdersForPatient(@Param("procedureId") Long procedureId, @Param("startDate") LocalDateTime start);
 
+//    @Query(nativeQuery = true,
+//            value = "select * from orderr " +
+//                    "    where patient_id is not null " +
+//                    "    and patient_id = :patientId ")
+//    List<Order> findAllPatientOrders(@Param("patientId") Long patientId);
+
+    // Dasha Tkachenko
+    List<Order> findAllByDoctorUserIdIsNotNullAndPatientUserIdIsNullAndProcedureProcedureIdAndStartGreaterThan(Long procedureId, LocalDateTime localDateTime);
+    List<Order> findAllByDoctorUserIdIsNotNullAndPatientUserId(Long userId);
+    //end Dasha Tkachenko
 }

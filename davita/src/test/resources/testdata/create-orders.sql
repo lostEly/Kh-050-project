@@ -21,7 +21,7 @@ insert into procedure (procedure_id, name, cost, duration) values (3, 'Procedure
 insert into procedure (procedure_id, name, cost, duration) values (4, 'Procedure4', 40, '10:00:00');
 
 insert into orderr (order_id, start, finish, cost, procedure_id, doctor_id, patient_id) values (1, '2021-08-04 10:10:00', '2021-08-04 10:20:00', 10.0, 1,1,3);
-insert into orderr (order_id, start, finish, cost, procedure_id, doctor_id, patient_id) values (2, '2021-08-05 10:10:00', '2021-08-05 10:20:00', 20.0, 2,1,4);
+insert into orderr (order_id, start, finish, cost, procedure_id, doctor_id, patient_id) values (2, '2021-08-05 15:10:00', '2021-08-05 15:20:00', 20.0, 2,1,4);
 insert into orderr (order_id, start, finish, cost, procedure_id, doctor_id, patient_id) values (3, '2021-08-06 10:10:00', '2021-08-06 10:20:00', 30.0, 1,2,3);
 insert into orderr (order_id, start, finish, cost, procedure_id, doctor_id            ) values (4, '2021-08-07 10:10:00', '2021-08-07 10:20:00', 40.0, 2,1  );
 insert into orderr (order_id, start, finish, cost, procedure_id, doctor_id            ) values (5, '2021-08-08 10:10:00', '2021-08-08 10:20:00', 50.0, 1,2  );

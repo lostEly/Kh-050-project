@@ -211,7 +211,7 @@ class OrderControllerTest {
     @Sql(scripts = "classpath:testdata/create-orders.sql")
     @DisplayName("GET: all patient orders")
     void patientOrders() throws Exception {
-        mockMvc.perform(get("/orders/appointments/3"))
+        mockMvc.perform(get("/orders/appointments?patientId=3"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))//3
                 .andExpect(jsonPath("$[0].patientId", is(3)))
@@ -222,7 +222,7 @@ class OrderControllerTest {
     @Sql(scripts = "classpath:testdata/create-orders.sql")
     @DisplayName("GET: all patient orders 404")
     void patientOrders404() throws Exception {
-        mockMvc.perform(get("/orders/appointments/999"))
+        mockMvc.perform(get("/orders/appointments?patientId=999"))
                 .andExpect(status().isNotFound());
     }
 
@@ -230,7 +230,7 @@ class OrderControllerTest {
     @Sql(scripts = "classpath:testdata/create-orders.sql")
     @DisplayName("GET: all doctor orders")
     void doctorOrders() throws Exception {
-        mockMvc.perform(get("/orders/doctor-appointments/2"))
+        mockMvc.perform(get("/orders/doctor-appointments?doctorId=2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(jsonPath("$[0].doctorId", is(2)))
@@ -242,7 +242,7 @@ class OrderControllerTest {
     @Sql(scripts = "classpath:testdata/create-orders.sql")
     @DisplayName("GET: all doctor orders 404")
     void doctorOrders404() throws Exception {
-        mockMvc.perform(get("/orders/doctor-appointments/99999"))
+        mockMvc.perform(get("/orders/doctor-appointments?doctorId=99999"))
                 .andExpect(status().isNotFound());
     }
 
@@ -250,7 +250,7 @@ class OrderControllerTest {
     @Sql(scripts = "classpath:testdata/create-orders.sql")
     @DisplayName("GET: free orders for patient")
     void patientFreeOrders() throws Exception {
-        mockMvc.perform(get("/orders/free/2"))
+        mockMvc.perform(get("/orders/free?procedureId=2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))//3
                 .andExpect(jsonPath("$[0].procedureId", is(2)))
@@ -261,7 +261,7 @@ class OrderControllerTest {
     @Sql(scripts = "classpath:testdata/create-orders.sql")
     @DisplayName("GET: free orders for patient")
     void patientFreeOrders404() throws Exception {
-        mockMvc.perform(get("/orders/free/333333"))
+        mockMvc.perform(get("/orders/free?procedureId=3333333"))
                 .andExpect(status().isNotFound());
     }
 

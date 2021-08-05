@@ -4,7 +4,6 @@ import com.softserve.kh50project.davita.dto.DoctorDto;
 import com.softserve.kh50project.davita.dto.OrderDto;
 import com.softserve.kh50project.davita.dto.PatientDto;
 import com.softserve.kh50project.davita.dto.ProcedureDto;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.Map;
 public interface OrderService {
     OrderDto findById(Long id);
     List<OrderDto> findAll();
-    List<OrderDto> findAllFreeOrdersForPatient(Long procedureId);
+    List<OrderDto> findAllFreeOrdersByProcedure(Long procedureId);
     List<OrderDto> findAllFreeOrdersForDoctor();
     List<OrderDto> findAllPatientOrders(Long patientId);
     List<OrderDto> findAllDoctorOrders(Long doctorId);

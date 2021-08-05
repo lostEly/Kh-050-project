@@ -116,15 +116,28 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.deleteById(id);
     }
 
+    //************************
+    // Dasha Tkachenko
+    //************************
     @Override
-    public List<OrderDto> findAllFreeOrdersForPatient(Long procedureId) {
+    public List<OrderDto> findAllFreeOrdersByProcedure(Long procedureId) {
         procedureRepository.findById(procedureId)
                 .orElseThrow(ResourceNotFoundException::new);
-        return orderRepository.findAllFreeOrdersForPatient(procedureId, LocalDateTime.now())
+        return orderRepository.findAllByDoctorUserIdIsNotNullAndPatientUserIdIsNullAndProcedureProcedureIdAndStartGreaterThan(procedureId, LocalDateTime.now())
                 .stream()
                 .map(this::convertOrderToDto)
                 .collect(Collectors.toList());
     }
+    @Override
+    public List<OrderDto> findAllPatientOrders(Long patientId) {
+        patientRepository.findById(patientId)
+                .orElseThrow(ResourceNotFoundException::new);
+        return orderRepository.findAllByDoctorUserIdIsNotNullAndPatientUserId(patientId).stream()
+                .map(this::convertOrderToDto)
+                .collect(Collectors.toList());
+    }
+    // end Dasha Tkachenko
+
 
     @Override
     public List<OrderDto> findAllFreeOrdersForDoctor() {
@@ -133,14 +146,6 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<OrderDto> findAllPatientOrders(Long patientId) {
-        patientRepository.findById(patientId)
-                .orElseThrow(ResourceNotFoundException::new);
-        return orderRepository.findAllPatientOrders(patientId).stream()
-                .map(this::convertOrderToDto)
-                .collect(Collectors.toList());
-    }
 
     @Override
     public List<OrderDto> findAllDoctorOrders(Long doctorId) {
