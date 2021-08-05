@@ -5,26 +5,20 @@ import com.softserve.kh50project.davita.dto.OrderDto;
 import com.softserve.kh50project.davita.dto.PatientDto;
 import com.softserve.kh50project.davita.dto.ProcedureDto;
 import com.softserve.kh50project.davita.exceptions.ResourceNotFoundException;
-import com.softserve.kh50project.davita.model.Doctor;
 import com.softserve.kh50project.davita.model.Order;
-import com.softserve.kh50project.davita.model.Patient;
-import com.softserve.kh50project.davita.model.Procedure;
 import com.softserve.kh50project.davita.repository.DoctorRepository;
 import com.softserve.kh50project.davita.repository.OrderRepository;
 import com.softserve.kh50project.davita.repository.PatientRepository;
 import com.softserve.kh50project.davita.repository.ProcedureRepository;
 import com.softserve.kh50project.davita.service.OrderService;
-import com.softserve.kh50project.davita.specification.DoctorSpecification;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import static java.util.Objects.nonNull;
 
 
 @Service
@@ -36,14 +30,21 @@ public class OrderServiceImpl implements OrderService {
     private final PatientRepository patientRepository;
 
     @Override
-    public OrderDto readById(Long id) {
-        Order findOrder = orderRepository.findById(id)
+    public List<OrderDto> findAll() {
+        return orderRepository.findAll().stream()
+                .map(this::convertOrderToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public OrderDto findById(Long orderId) {
+        Order findOrder = orderRepository.findById(orderId)
                 .orElseThrow(ResourceNotFoundException::new);
         return convertOrderToDto(findOrder);
     }
 
     @Override
-    public List<OrderDto> read(LocalDateTime start, LocalDateTime finish, ProcedureDto procedureDto, DoctorDto doctorDto, PatientDto patientDto) {
+    public List<OrderDto> find(LocalDateTime start, LocalDateTime finish, ProcedureDto procedureDto, DoctorDto doctorDto, PatientDto patientDto) {
         Specification<Order> specification = orderRepository.getOrderQuery(
                 start,
                 finish,
@@ -51,8 +52,7 @@ public class OrderServiceImpl implements OrderService {
                 (doctorDto != null) ? doctorRepository.getById(doctorDto.getUserId()) : null,
                 (patientDto != null) ? patientRepository.getById(patientDto.getUserId()) : null
         );
-        return orderRepository.findAll(specification)
-                .stream()
+        return orderRepository.findAll(specification).stream()
                 .map(this::convertOrderToDto)
                 .collect(Collectors.toList());
     }
@@ -80,8 +80,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto patch(Map<String, Object> fields, Long id) {
-        Order order = orderRepository.findById(id)
+    public OrderDto patch(Map<String, Object> fields, Long orderId) {
+        Order order = orderRepository.findById(orderId)
                 .orElseThrow(ResourceNotFoundException::new);
         for (String fieldName : fields.keySet()) {
             switch (fieldName) {
@@ -116,16 +116,32 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.deleteById(id);
     }
 
+    //************************
+    // Dasha Tkachenko
+    //************************
     @Override
     public List<OrderDto> findAllFreeOrdersByProcedure(Long procedureId) {
-        return orderRepository.findAllByDoctorUserIdIsNotNullAndPatientUserIdIsNullAndProcedureProcedureIdAndStartGreaterThan(procedureId, LocalDateTime.now()).stream()
+        procedureRepository.findById(procedureId)
+                .orElseThrow(ResourceNotFoundException::new);
+        return orderRepository.findAllByDoctorUserIdIsNotNullAndPatientUserIdIsNullAndProcedureProcedureIdAndStartGreaterThan(procedureId, LocalDateTime.now())
+                .stream()
                 .map(this::convertOrderToDto)
                 .collect(Collectors.toList());
     }
-
     @Override
     public List<OrderDto> findAllPatientOrders(Long patientId) {
+        patientRepository.findById(patientId)
+                .orElseThrow(ResourceNotFoundException::new);
         return orderRepository.findAllByDoctorUserIdIsNotNullAndPatientUserId(patientId).stream()
+                .map(this::convertOrderToDto)
+                .collect(Collectors.toList());
+    }
+    // end Dasha Tkachenko
+
+
+    @Override
+    public List<OrderDto> findAllFreeOrdersForDoctor() {
+        return orderRepository.findAllFreeOrdersForDoctor(LocalDateTime.now()).stream()
                 .map(this::convertOrderToDto)
                 .collect(Collectors.toList());
     }
@@ -133,21 +149,31 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> findAllDoctorOrders(Long doctorId) {
+        doctorRepository.findById(doctorId)
+                .orElseThrow(ResourceNotFoundException::new);
         return orderRepository.findAllDoctorOrders(doctorId).stream()
                 .map(this::convertOrderToDto)
                 .collect(Collectors.toList());
     }
 
-
+    @Override
+    public List<OrderDto> findDoctorCalendar(Long doctorId) {
+        doctorRepository.findById(doctorId)
+                .orElseThrow(ResourceNotFoundException::new);
+        LocalDateTime startDate = LocalDateTime.now();
+        LocalDateTime finishDate = startDate.plusDays(1).withHour(23).withMinute(59).withSecond(59); //next day end
+        return orderRepository.findDoctorCalendar(doctorId, startDate, finishDate).stream()
+                .map(this::convertOrderToDto)
+                .collect(Collectors.toList());
+    }
 
     private Order convertDtoToOrder(OrderDto orderDto) {
         Order order = new Order();
+        order.setCost(orderDto.getCost());
         if (orderDto.getStart() != null)
             order.setStart(LocalDateTime.parse(orderDto.getStart()));
         if (orderDto.getStart() != null)
             order.setFinish(LocalDateTime.parse(orderDto.getFinish()));
-        if (orderDto.getStart() != null)
-            order.setCost(orderDto.getCost());
         if (orderDto.getProcedureId() != null)
             order.setProcedure(procedureRepository.getById(orderDto.getProcedureId()));
         if (orderDto.getDoctorId() != null)
@@ -160,11 +186,11 @@ public class OrderServiceImpl implements OrderService {
     private OrderDto convertOrderToDto(Order order) {
         OrderDto orderDto = new OrderDto();
         orderDto.setOrderId(order.getOrderId());
+        orderDto.setCost(order.getCost());
         if (order.getStart() != null)
             orderDto.setStart(order.getStart().toString());
         if (order.getFinish() != null)
             orderDto.setFinish(order.getFinish().toString());
-        orderDto.setCost(order.getCost());
         if (order.getProcedure() != null)
             orderDto.setProcedureId(order.getProcedure().getProcedureId());
         if (order.getDoctor() != null)
