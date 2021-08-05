@@ -35,7 +35,7 @@ public class AuthController {
         try {
             userService.saveUser(u);
         }catch (Exception e){
-            return new ResponseEntity<>("Unable to register user: " + e.getMessage(), HttpStatus.CONFLICT);
+            return new ResponseEntity<>("User with such login already exists!", HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>("You are successfully registered!", HttpStatus.OK);
     }
@@ -44,7 +44,7 @@ public class AuthController {
     public ResponseEntity<?> authorize(@RequestBody AuthRequest request) {
         User user = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
         if(user == null){
-            return new ResponseEntity<>("User not found!", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Bad Credentials!", HttpStatus.UNAUTHORIZED);
         }
         String token = jwtProvider.generateToken(user.getLogin());
         return new ResponseEntity<>(new AuthResponse(token), HttpStatus.OK);
