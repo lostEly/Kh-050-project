@@ -55,9 +55,8 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
             value = "select * from orderr " +
                     "    where doctor_id is null " +
                     "    and patient_id is null " +
-                    "    and start >= :startDate " +
-                    "    and procedure_id = :procedureId ")
-    List<Order> findAllFreeOrdersForDoctor(@Param("procedureId") Long procedureId,@Param("startDate") LocalDateTime startDate);
+                    "    and start >= :startDate ")
+    List<Order> findAllFreeOrdersForDoctor(@Param("startDate") LocalDateTime startDate);
 
     @Query(nativeQuery = true,
             value = "select * from orderr " +

@@ -38,10 +38,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto findById(Long orderId) {
-        System.out.println("2="+orderId);
         Order findOrder = orderRepository.findById(orderId)
                 .orElseThrow(ResourceNotFoundException::new);
-        System.out.println("++++++++++++"+findOrder);
         return convertOrderToDto(findOrder);
     }
 
@@ -120,20 +118,25 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> findAllFreeOrdersForPatient(Long procedureId) {
-        return orderRepository.findAllFreeOrdersForPatient(procedureId, LocalDateTime.now()).stream()
+        procedureRepository.findById(procedureId)
+                .orElseThrow(ResourceNotFoundException::new);
+        return orderRepository.findAllFreeOrdersForPatient(procedureId, LocalDateTime.now())
+                .stream()
                 .map(this::convertOrderToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<OrderDto> findAllFreeOrdersForDoctor(Long procedureId) {
-        return orderRepository.findAllFreeOrdersForDoctor(procedureId, LocalDateTime.now()).stream()
+    public List<OrderDto> findAllFreeOrdersForDoctor() {
+        return orderRepository.findAllFreeOrdersForDoctor(LocalDateTime.now()).stream()
                 .map(this::convertOrderToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<OrderDto> findAllPatientOrders(Long patientId) {
+        patientRepository.findById(patientId)
+                .orElseThrow(ResourceNotFoundException::new);
         return orderRepository.findAllPatientOrders(patientId).stream()
                 .map(this::convertOrderToDto)
                 .collect(Collectors.toList());
@@ -141,6 +144,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> findAllDoctorOrders(Long doctorId) {
+        doctorRepository.findById(doctorId)
+                .orElseThrow(ResourceNotFoundException::new);
         return orderRepository.findAllDoctorOrders(doctorId).stream()
                 .map(this::convertOrderToDto)
                 .collect(Collectors.toList());
@@ -148,6 +153,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> findDoctorCalendar(Long doctorId) {
+        doctorRepository.findById(doctorId)
+                .orElseThrow(ResourceNotFoundException::new);
         LocalDateTime startDate = LocalDateTime.now();
         LocalDateTime finishDate = startDate.plusDays(1).withHour(23).withMinute(59).withSecond(59); //next day end
         return orderRepository.findDoctorCalendar(doctorId, startDate, finishDate).stream()

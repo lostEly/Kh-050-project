@@ -1,37 +1,19 @@
 package com.softserve.kh50project.davita.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.kh50project.davita.dto.OrderDto;
-import com.softserve.kh50project.davita.dto.ProcedureDto;
-import com.softserve.kh50project.davita.model.Doctor;
-import com.softserve.kh50project.davita.model.Order;
-import com.softserve.kh50project.davita.model.Patient;
-import com.softserve.kh50project.davita.model.Procedure;
-import com.softserve.kh50project.davita.service.impl.OrderServiceImpl;
-import com.softserve.kh50project.davita.service.impl.ProcedureServiceImpl;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.*;
 
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -45,10 +27,6 @@ class OrderControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-//    @BeforeEach
-//    @Sql(scripts = "classpath:testdata/create-orders.sql")
-//    void initTables(){ }
 
     @Test
     @Sql(scripts = "classpath:testdata/create-orders.sql")
@@ -122,7 +100,7 @@ class OrderControllerTest {
         orderDto.setFinish("2021-07-01T11:11:11");
         orderDto.setCost(999.0);
 
-        mockMvc.perform(put("/orders/99")
+        mockMvc.perform(put("/orders/9999")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(orderDto)))
                 .andExpect(status().isNotFound());
@@ -163,7 +141,7 @@ class OrderControllerTest {
     @Test
     @Sql(scripts = "classpath:testdata/create-orders.sql")
     @DisplayName("DELETE: order by id 404")
-    void deleteNotExistingOrder() throws Exception {
+    void deleteOrder404() throws Exception {
         mockMvc.perform(delete("/orders/9999"))
                 .andExpect(status().isNotFound());
     }
@@ -172,8 +150,8 @@ class OrderControllerTest {
     @Sql(scripts = "classpath:testdata/create-orders.sql")
     @DisplayName("GET: order filter")
     void getOrderFilter() throws Exception {
-        String param1 = "start=2021-07-02T00:00:01";
-        String param2 = "finish=2021-07-07T23:59:59";
+        String param1 = "start=2021-08-05T00:00:01";
+        String param2 = "finish=2021-08-09T23:59:59";
         String param3 = "procedureId=2";
 
         mockMvc.perform(get("/orders/filter?"+param1+"&"+param2+"&"+param3))
@@ -185,6 +163,7 @@ class OrderControllerTest {
     }
 
     @Test
+    @Sql(scripts = "classpath:testdata/create-orders.sql")
     @DisplayName("PATCH: reserve orders")
     void bookOrders() throws Exception {
         String idStringList =2+","+3+","+4+","+5;
@@ -198,27 +177,101 @@ class OrderControllerTest {
                 .andExpect(jsonPath("$[2].doctorId", is(2)))
                 .andExpect(jsonPath("$[3].doctorId", is(2)));
     }
-//
-//    @Test
-//    void doctorNextDayCalendar() throws Exception {
-//        String startStr = "2021-07-02T00:00:01";
-//        LocalDateTime start = LocalDateTime.parse(startStr);
-//        LocalDateTime finish = start.plusDays(1).withHour(23).withMinute(59).withSecond(59);
-//        String finishStr = finish.toString();
-//
-//        Map<String, Object> fieldsMap = new HashMap();
-//        fieldsMap.put("start",startStr);
-//        fieldsMap.put("finish", finishStr);
-//        fieldsMap.put("doctorId", 2L);
-//
-//        mockMvc.perform(get("/orders")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(objectMapper.writeValueAsString(fieldsMap)))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$", hasSize(2)))//3
-//                .andExpect(jsonPath("$[0].doctorId", is(2)))
-//                .andExpect(jsonPath("$[1].doctorId", is(2)))
-//                .andExpect(status().isOk());
-//    }
+
+    @Test
+    @Sql(scripts = "classpath:testdata/create-orders.sql")
+    @DisplayName("PATCH: reserve orders 404")
+    void bookOrders404() throws Exception {
+        String idStringList =200+","+300+","+400+","+500;
+        mockMvc.perform(patch("/orders/bookOrdersForDoctor/2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(idStringList)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Sql(scripts = "classpath:testdata/create-orders.sql")
+    @DisplayName("GET: doctor calendar")
+    void doctorNextDayCalendar() throws Exception {
+        mockMvc.perform(get("/orders/doctor-calendar/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))//3
+                .andExpect(jsonPath("$[0].doctorId", is(1)));
+    }
+
+    @Test
+    @Sql(scripts = "classpath:testdata/create-orders.sql")
+    @DisplayName("GET: doctor calendar 404")
+    void doctorNextDayCalendar404() throws Exception {
+        mockMvc.perform(get("/orders/doctor-calendar/9999"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Sql(scripts = "classpath:testdata/create-orders.sql")
+    @DisplayName("GET: all patient orders")
+    void patientOrders() throws Exception {
+        mockMvc.perform(get("/orders/appointments/3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))//3
+                .andExpect(jsonPath("$[0].patientId", is(3)))
+                .andExpect(jsonPath("$[1].patientId", is(3)));
+    }
+
+    @Test
+    @Sql(scripts = "classpath:testdata/create-orders.sql")
+    @DisplayName("GET: all patient orders 404")
+    void patientOrders404() throws Exception {
+        mockMvc.perform(get("/orders/appointments/999"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Sql(scripts = "classpath:testdata/create-orders.sql")
+    @DisplayName("GET: all doctor orders")
+    void doctorOrders() throws Exception {
+        mockMvc.perform(get("/orders/doctor-appointments/2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].doctorId", is(2)))
+                .andExpect(jsonPath("$[1].doctorId", is(2)))
+                .andExpect(jsonPath("$[2].doctorId", is(2)));
+    }
+
+    @Test
+    @Sql(scripts = "classpath:testdata/create-orders.sql")
+    @DisplayName("GET: all doctor orders 404")
+    void doctorOrders404() throws Exception {
+        mockMvc.perform(get("/orders/doctor-appointments/99999"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Sql(scripts = "classpath:testdata/create-orders.sql")
+    @DisplayName("GET: free orders for patient")
+    void patientFreeOrders() throws Exception {
+        mockMvc.perform(get("/orders/free/2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))//3
+                .andExpect(jsonPath("$[0].procedureId", is(2)))
+                .andExpect(jsonPath("$[1].procedureId", is(2)));
+    }
+
+    @Test
+    @Sql(scripts = "classpath:testdata/create-orders.sql")
+    @DisplayName("GET: free orders for patient")
+    void patientFreeOrders404() throws Exception {
+        mockMvc.perform(get("/orders/free/333333"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Sql(scripts = "classpath:testdata/create-orders.sql")
+    @DisplayName("GET: free orders for doctor")
+    void doctorFreeOrders() throws Exception {
+        mockMvc.perform(get("/orders/doctor-free"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
 
 }

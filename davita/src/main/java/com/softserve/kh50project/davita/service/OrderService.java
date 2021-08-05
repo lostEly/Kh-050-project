@@ -14,7 +14,7 @@ public interface OrderService {
     OrderDto findById(Long id);
     List<OrderDto> findAll();
     List<OrderDto> findAllFreeOrdersForPatient(Long procedureId);
-    List<OrderDto> findAllFreeOrdersForDoctor(Long procedureId);
+    List<OrderDto> findAllFreeOrdersForDoctor();
     List<OrderDto> findAllPatientOrders(Long patientId);
     List<OrderDto> findAllDoctorOrders(Long doctorId);
     List<OrderDto> findDoctorCalendar(Long doctorId);

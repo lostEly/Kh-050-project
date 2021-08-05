@@ -90,8 +90,8 @@ public class OrderController {
      * @param procedureId Long
      * @return The OrderDto by id
      */
-    @GetMapping("/free")
-    public ResponseEntity<List<OrderDto>> findAllFreePatientOrders(@RequestParam Long procedureId) {
+    @GetMapping("/free/{procedureId}")
+    public ResponseEntity<List<OrderDto>> findAllFreePatientOrders(@PathVariable Long procedureId) {
         List<OrderDto> ordersDto = orderService.findAllFreeOrdersForPatient(procedureId);
         return new ResponseEntity<>(ordersDto, HttpStatus.OK);
     }
@@ -99,12 +99,11 @@ public class OrderController {
    /**
      * Getting free order to doctor
      *
-     * @param procedureId Long
      * @return The OrderDto by id
      */
     @GetMapping("/doctor-free")
-    public ResponseEntity<List<OrderDto>> findAllFreeDoctorOrders(@RequestParam Long procedureId) {
-        List<OrderDto> ordersDto = orderService.findAllFreeOrdersForDoctor(procedureId);
+    public ResponseEntity<List<OrderDto>> findAllFreeDoctorOrders() {
+        List<OrderDto> ordersDto = orderService.findAllFreeOrdersForDoctor();
         return new ResponseEntity<>(ordersDto, HttpStatus.OK);
     }
 
@@ -114,8 +113,8 @@ public class OrderController {
      * @param patientId Long
      * @return The OrderDto by id
      */
-    @GetMapping("/appointments")
-    public ResponseEntity<List<OrderDto>> findAllPatientOrders(@RequestParam Long patientId) {
+    @GetMapping("/appointments/{patientId}")
+    public ResponseEntity<List<OrderDto>> findAllPatientOrders(@PathVariable Long patientId) {
         List<OrderDto> ordersDto = orderService.findAllPatientOrders(patientId);
         return new ResponseEntity<>(ordersDto, HttpStatus.OK);
     }
@@ -126,8 +125,8 @@ public class OrderController {
      * @param doctorId Long
      * @return The OrderDto by id
      */
-    @GetMapping("/doctor-appointments")
-    public ResponseEntity<List<OrderDto>> findAllDoctorOrders(@RequestParam Long doctorId) {
+    @GetMapping("/doctor-appointments/{doctorId}")
+    public ResponseEntity<List<OrderDto>> findAllDoctorOrders(@PathVariable Long doctorId) {
         List<OrderDto> ordersDto = orderService.findAllDoctorOrders(doctorId);
         return new ResponseEntity<>(ordersDto, HttpStatus.OK);
     }
@@ -138,8 +137,8 @@ public class OrderController {
      * @param doctorId Long
      * @return The OrderDto by id
      */
-    @GetMapping("/doctor-calendar")
-    public ResponseEntity<List<OrderDto>> findAllDoctorCalendar(@RequestParam Long doctorId) {
+    @GetMapping("/doctor-calendar/{doctorId}")
+    public ResponseEntity<List<OrderDto>> findAllDoctorCalendar(@PathVariable Long doctorId) {
         List<OrderDto> ordersDto = orderService.findDoctorCalendar(doctorId);
         return new ResponseEntity<>(ordersDto, HttpStatus.OK);
     }
