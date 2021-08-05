@@ -5,9 +5,9 @@ import com.softserve.kh50project.davita.config.jwt.JwtProvider;
 import com.softserve.kh50project.davita.model.User;
 import com.softserve.kh50project.davita.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -28,18 +28,26 @@ public class AuthController {
     }
 
     @PostMapping("/register") //signup
-    public String registerUser(@RequestBody @Valid RegistrationRequest registrationRequest) {
+    public ResponseEntity<?> registerUser(@RequestBody @Valid RegistrationRequest registrationRequest) {
         User u = new User();
         u.setPassword(registrationRequest.getPassword());
         u.setLogin(registrationRequest.getLogin());
-        userService.saveUser(u);
-        return "You are successfully registered!";
+        try {
+            userService.saveUser(u);
+        }catch (Exception e){
+            return new ResponseEntity<>("Unable to register user: " + e.getMessage(), HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<>("You are successfully registered!", HttpStatus.OK);
     }
 
     @PostMapping("/authorize")      //signin
-    public AuthResponse auth(@RequestBody AuthRequest request) {
+    public ResponseEntity<?> authorize(@RequestBody AuthRequest request) {
         User user = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
+        if(user == null){
+            return new ResponseEntity<>("User not found!", HttpStatus.UNAUTHORIZED);
+        }
         String token = jwtProvider.generateToken(user.getLogin());
-        return new AuthResponse(token);
+        return new ResponseEntity<>(new AuthResponse(token), HttpStatus.OK);
     }
+
 }
