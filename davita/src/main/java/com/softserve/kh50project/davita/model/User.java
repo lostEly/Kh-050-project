@@ -1,6 +1,7 @@
 package com.softserve.kh50project.davita.model;
 
 import lombok.Data;
+import org.apache.commons.lang3.builder.ToStringExclude;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -19,7 +20,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long userId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @Size(max = 45)
     String login;
 
@@ -57,6 +58,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+    @ToStringExclude
     private List<Role> roles = new ArrayList<>();
 
     public void addRole(Role role) {
