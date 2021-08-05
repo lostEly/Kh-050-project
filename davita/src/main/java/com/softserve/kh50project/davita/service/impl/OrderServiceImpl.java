@@ -37,9 +37,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto findById(Long id) {
-        Order findOrder = orderRepository.findById(id)
+    public OrderDto findById(Long orderId) {
+        System.out.println("2="+orderId);
+        Order findOrder = orderRepository.findById(orderId)
                 .orElseThrow(ResourceNotFoundException::new);
+        System.out.println("++++++++++++"+findOrder);
         return convertOrderToDto(findOrder);
     }
 
@@ -80,8 +82,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto patch(Map<String, Object> fields, Long id) {
-        Order order = orderRepository.findById(id)
+    public OrderDto patch(Map<String, Object> fields, Long orderId) {
+        Order order = orderRepository.findById(orderId)
                 .orElseThrow(ResourceNotFoundException::new);
         for (String fieldName : fields.keySet()) {
             switch (fieldName) {

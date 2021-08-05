@@ -7,16 +7,16 @@ import com.softserve.kh50project.davita.service.PatientService;
 import com.softserve.kh50project.davita.service.ProcedureService;
 import com.softserve.kh50project.davita.service.impl.OrderServiceImpl;
 import lombok.AllArgsConstructor;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/orders")
@@ -52,7 +52,7 @@ public class OrderController {
      * @param orderId Long
      * @return The OrderDto by id
      */
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/{orderId}")
     public ResponseEntity<OrderDto> readById(@PathVariable Long orderId) {
         OrderDto findOrderDto = orderService.findById(orderId);
         return new ResponseEntity<>(findOrderDto, HttpStatus.OK);
@@ -74,7 +74,7 @@ public class OrderController {
                                                @RequestParam(defaultValue = "0") Long procedureId,
                                                @RequestParam(defaultValue = "0") Long doctorId,
                                                @RequestParam(defaultValue = "0") Long patientId) {
-        List<OrderDto> ordersDto = orderService.find(
+       List<OrderDto> ordersDto = orderService.find(
                 (start.length()>0) ? LocalDateTime.parse(start) : null,
                 (finish.length()>0) ? LocalDateTime.parse(finish) : null,
                 (procedureId>0) ? procedureService.readById(procedureId) : null,
@@ -185,15 +185,19 @@ public class OrderController {
     /**
      * Getting orders without doctor from start to finish
      *
-     * @param idList   List<Long>
+     * @param idStringList   String "2,3,4,5"
      * @param doctorId Long
      * @return The List<OrderDto> of orders
      */
     @PatchMapping(value = "/bookOrdersForDoctor/{doctorId}")
-    public ResponseEntity<List<OrderDto>> bookOrders(@RequestBody List<Long> idList, @PathVariable Long doctorId) {
+    public ResponseEntity<List<OrderDto>> bookOrders(@RequestBody String idStringList, @PathVariable Long doctorId) {
+        idStringList = idStringList.replaceAll("\"","");
+        List<Long> idList = Arrays.stream(idStringList.split(","))
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
         List<OrderDto> ordersDto = new ArrayList<>();
         Map<String, Object> patchFields = new HashMap<>();
-        patchFields.put("doctorId", doctorId);
+        patchFields.put("doctorId",doctorId);
         for (Long idOrder : idList) {
             ordersDto.add(orderService.patch(patchFields, idOrder));
         }
