@@ -34,7 +34,8 @@ public class UserService {
         Role userRole = roleRepository.findByName("ROLE_USER");
         user.addRole(userRole);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        User newUser = userRepository.save(user);
+        return newUser;
     }
 
     public User findByLogin(String login) {
