@@ -1,13 +1,13 @@
 package com.softserve.kh50project.davita.controller;
-
-
 import com.softserve.kh50project.davita.config.jwt.JwtProvider;
 import com.softserve.kh50project.davita.model.User;
 import com.softserve.kh50project.davita.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
@@ -34,7 +34,7 @@ public class AuthController {
         u.setLogin(registrationRequest.getLogin());
         try {
             userService.saveUser(u);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>("User with such login already exists!", HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>("You are successfully registered!", HttpStatus.OK);
@@ -43,7 +43,7 @@ public class AuthController {
     @PostMapping("/authorize")      //signin
     public ResponseEntity<?> authorize(@RequestBody AuthRequest request) {
         User user = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
-        if(user == null){
+        if (user == null) {
             return new ResponseEntity<>("Bad Credentials!", HttpStatus.UNAUTHORIZED);
         }
         String token = jwtProvider.generateToken(user.getLogin());
